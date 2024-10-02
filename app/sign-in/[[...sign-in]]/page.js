@@ -12,6 +12,8 @@ export default function Page() {
           objectFit="cover"
         />
 
+        {/* Some COde has been editted here */}
+
   <div className="absolute top-60 left-60">     
   <SignIn />
   </div> 
