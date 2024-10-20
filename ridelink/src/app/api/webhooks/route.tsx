@@ -54,6 +54,8 @@ export async function POST(req: Request) {
   // For this guide, you simply log the payload to the console
   const { id } = evt.data
   const eventType = evt.type
+  
+
 
   // CREATE User in mongodb
   if (eventType === "user.created") {
@@ -86,10 +88,9 @@ export async function POST(req: Request) {
 
 
   if (eventType === 'user.deleted') {
-    const {id} = evt.data;
     console.log(`Deleting user with Clerk ID: ${id}`);
     
-    const isDeleted = await deleteUser(id);
+    const isDeleted = await deleteUser("${id}");
 
     if (isDeleted) {
       return NextResponse.json({ message: 'User deleted successfully' });
