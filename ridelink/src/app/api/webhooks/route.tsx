@@ -90,7 +90,7 @@ export async function POST(req: Request) {
   if (eventType === 'user.deleted') {
     console.log(`Deleting user with Clerk ID: ${id}`);
     
-    const isDeleted = await deleteUser("${id}");
+    const isDeleted = await deleteUser(id!);
 
     if (isDeleted) {
       return NextResponse.json({ message: 'User deleted successfully' });
