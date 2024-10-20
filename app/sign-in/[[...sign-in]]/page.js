@@ -3,14 +3,7 @@ import Image from "next/image";
 
 export default function Page() {
   return (
-    <div >
-    <Image
-          src="/uber.gif"
-          alt="Vercel Logo"
-          className="dark:invert"
-          layout="fill"
-          objectFit="cover"
-        />
+    <div className="bg-uber-png ">
 
         {/* Some COde has been editted here */}
 
