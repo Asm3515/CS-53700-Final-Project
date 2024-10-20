@@ -4,6 +4,7 @@ import { WebhookEvent } from '@clerk/nextjs/server'
 import { NextResponse } from "next/server";
 import { clerkClient } from '@clerk/nextjs/server';
 import { createUser } from '@/lib/actions/user.action';
+import { deleteUser } from '@/lib/actions/user.action';
 
 export async function POST(req: Request) {
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the endpoint
@@ -81,6 +82,20 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({ message: "New user created", user: newUser });
+  }
+
+
+  if (eventType === 'user.deleted') {
+    const {id} = evt.data;
+    console.log(`Deleting user with Clerk ID: ${id}`);
+    
+    const isDeleted = await deleteUser(id);
+
+    if (isDeleted) {
+      return NextResponse.json({ message: 'User deleted successfully' });
+    } else {
+      return NextResponse.json({ message: 'User not found or already deleted' }, { status: 404 });
+    }
   }
 
   console.log(`Webhook with and ID of ${id} and type of ${eventType}`)

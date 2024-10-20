@@ -1,5 +1,4 @@
-import {Schema,model,models} from "mongoose";
-
+import { Schema, model, models } from "mongoose";
 
 const UserSchema = new Schema({
   clerkId: {
@@ -16,17 +15,17 @@ const UserSchema = new Schema({
     type: String,
     unique: true,
   },
-  photo: {
+  photo: String,
+  firstName: String,
+  lastName: String,
+  role: {
     type: String,
+    enum: ["User", "Rider", "Manager"],
+    default: "User", // Default role is User
   },
-  firstName: {
-    type: String,
-  },
-  lastName: {
-    type: String,
-  },
+  carpoolRequests: [{ type: Schema.Types.ObjectId, ref: "Carpool" }], // User's carpool requests
+  ridesGiven: [{ type: Schema.Types.ObjectId, ref: "Ride" }], // Rides offered as a rider
 });
 
-const User = models?.User || model("User", UserSchema);
-
+const User = models.User || model("User", UserSchema);
 export default User;
