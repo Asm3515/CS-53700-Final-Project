@@ -1,20 +1,9 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
+import { Inter } from "next/font/google";
 import "./globals.css";
-import { ClerkProvider ,SignedOut, SignInButton,SignedIn, UserButton } from "@clerk/nextjs";
-
-
-
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
+import { ClerkLoaded, ClerkLoading, ClerkProvider } from "@clerk/nextjs";
+import Navbar from "@/components/Navbar";
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -23,26 +12,26 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <ClerkProvider>
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <div>
-          <SignedOut>
-            <SignInButton/>
-          </SignedOut>
-          <SignedIn>
-            <UserButton showName/>
-          </SignedIn>
-        </div>
-        {children}
-      </body>
-    </html>
+      <html lang="en">
+        <body className={inter.className}>
+          <div className="mx-36 text-2xl">
+            <ClerkLoading>
+              <div className="flex flex-col items-center text-center mt-32">
+                LOADING...
+              </div>
+            </ClerkLoading>
+            <ClerkLoaded>
+              <Navbar />
+              {children}
+            </ClerkLoaded>
+          </div>
+        </body>
+      </html>
     </ClerkProvider>
   );
 }
