@@ -5,6 +5,8 @@ import { NextResponse } from "next/server";
 import { clerkClient } from '@clerk/nextjs/server';
 import { createUser } from '@/lib/actions/user.action';
 import { deleteUser } from '@/lib/actions/user.action';
+import { updateUser } from '@/lib/actions/user.action';
+
 
 export async function POST(req: Request) {
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the endpoint
@@ -99,8 +101,32 @@ export async function POST(req: Request) {
     }
   }
 
-  console.log(`Webhook with and ID of ${id} and type of ${eventType}`)
-  console.log('Webhook body:', body)
+  if (eventType === 'user.updated'){
+    const { id, email_addresses, image_url, first_name, last_name, username } =
+      evt.data;
+    const userUpdated = {
+      clerkId: id,
+      email: email_addresses[0].email_address,
+      username: username!,
+      firstName: first_name,
+      lastName: last_name,
+      photo: image_url,
+    };
+
+      try {
+        const updatedUser = await updateUser(id, userUpdated);
+        return NextResponse.json({ message: "User updated successfully", user: updatedUser });
+    } catch (error) {
+        console.error("Error updating user:", error);
+        return NextResponse.json({ message: "User update failed"});
+    }
+
+  }
+
+
+
+  // console.log(`Webhook with and ID of ${id} and type of ${eventType}`)
+  // console.log('Webhook body:', body)
 
   return new Response('', { status: 200 })
 }
