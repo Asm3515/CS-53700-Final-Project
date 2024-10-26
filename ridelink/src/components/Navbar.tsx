@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { UserButton, useAuth } from "@clerk/nextjs";
+import { useAuth, SignOutButton } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
 
 const Navbar = async () => {
@@ -44,7 +44,9 @@ const Navbar = async () => {
               <Link href="/profile">
                 <span className="hover:underline cursor-pointer">Profile</span>
               </Link>
-              <UserButton afterSignOutUrl="/" />
+              <SignOutButton>
+                <button>Sign out</button>
+              </SignOutButton>
             </>
           )}
         </div>
@@ -87,7 +89,7 @@ const Navbar = async () => {
             </svg>
           </label>
 
-          <div className="hidden peer-checked:flex flex-col items-center absolute top-full right-0 rounded-b-lg bg-neutral-800 text-white p-4 gap-4">
+          <div className="hidden peer-checked:flex flex-col items-center absolute top-full z-10 right-0 rounded-b-lg bg-neutral-800 text-white p-4 gap-4">
             <Link href="/ride">
               <span className="hover:underline cursor-pointer">Ride</span>
             </Link>
@@ -113,7 +115,9 @@ const Navbar = async () => {
                     Profile
                   </span>
                 </Link>
-                <UserButton afterSignOutUrl="/" />
+                <SignOutButton>
+                  <button>Sign out</button>
+                </SignOutButton>
               </>
             )}
           </div>
