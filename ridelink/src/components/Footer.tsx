@@ -5,7 +5,7 @@ const Footer = () => {
   return (
     <>
       {/* Gold Divider */}
-      <div className="w-full h-[1px] bg-yellow-500 mb-4"></div>
+      <div className="w-full h-[1px] bg-yellow-500"></div>
 
       <footer className="row-start-3 flex flex-col items-center p-6 bg-black text-white md:flex-row md:justify-between">
         {/* Links */}
