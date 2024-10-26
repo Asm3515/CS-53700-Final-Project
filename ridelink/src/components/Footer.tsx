@@ -3,11 +3,10 @@ import Link from "next/link";
 
 const Footer = () => {
   return (
-    <>
-      {/* Gold Divider */}
-      <div className="w-full h-[1px] bg-yellow-500"></div>
+    <footer>
+      <div className="w-full md:mt-8 h-[1px] bg-yellow-500"></div>
 
-      <footer className="row-start-3 flex flex-col items-center p-6 bg-black text-white md:flex-row md:justify-between">
+      <div className="row-start-3 flex flex-col items-center p-6 sm:p-12 md:px-16 md:py-8 bg-black text-white md:flex-row md:justify-between">
         {/* Links */}
         <div className="flex flex-col items-center gap-2 mb-4 md:mb-0 md:items-start">
           <a href="/book-ride" className="text-lg hover:underline">
@@ -17,9 +16,6 @@ const Footer = () => {
             Give a Ride
           </a>
         </div>
-
-        {/* Center Text */}
-        <p className="text-center text-lg mb-4 md:mb-0">Share a ride!</p>
 
         {/* Logo with Link to Homepage */}
         <div className="flex items-center">
@@ -31,8 +27,11 @@ const Footer = () => {
             />
           </Link>
         </div>
-      </footer>
-    </>
+      </div>
+      <p className="bg-black p-4 text-center text-yellow-500">
+        &copy; {new Date().getFullYear()} RideLink. All rights reserved.
+      </p>
+    </footer>
   );
 };
 
