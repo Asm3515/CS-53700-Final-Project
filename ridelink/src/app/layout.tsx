@@ -20,7 +20,7 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body className={inter.className}>
-          <div className="mx-36 text-2xl">
+          <div className="text-xl mx-0 lg:mx-36">
             <ClerkLoading>
               <div className="flex flex-col items-center text-center mt-32">
                 LOADING...
@@ -29,15 +29,11 @@ export default function RootLayout({
             <ClerkLoaded>
               <Navbar />
               {children}
-              
             </ClerkLoaded>
           </div>
-          <Footer/>
+          <Footer />
         </body>
-        
-        
       </html>
-      
     </ClerkProvider>
   );
 }
