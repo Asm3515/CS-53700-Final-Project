@@ -23,7 +23,7 @@ export default function RootLayout({
           <div className="text-xl mx-0 lg:mx-36">
             <ClerkLoading>
               <div className="flex flex-col items-center text-center mt-32">
-                LOADING...
+                Lading, please wait...
               </div>
             </ClerkLoading>
             <ClerkLoaded>
