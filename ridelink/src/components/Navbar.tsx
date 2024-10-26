@@ -1,16 +1,30 @@
-import React from "react";
-import Link from "next/link";
-import { UserButton, useAuth } from "@clerk/nextjs";
-import { auth } from "@clerk/nextjs/server";
+"use client";
 
-const Navbar = async () => {
-  const { userId } = await auth();
-  const isAuth = !!userId;
+import Link from "next/link";
+import { SignOutButton, useUser } from "@clerk/nextjs";
+import React, { useState, useEffect } from "react";
+
+const Navbar = () => {
+  const { isSignedIn } = useUser();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleMenu = () => setIsOpen((prev) => !prev);
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isOpen]);
 
   return (
     <header className="bg-black text-white p-4">
       <div className="flex justify-between items-center mx-auto max-w-6xl">
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-6 w-full justify-between">
           <Link href="/" passHref>
             <img
               src="/ridelink-logo-black.webp"
@@ -18,106 +32,48 @@ const Navbar = async () => {
               className="h-10 w-auto cursor-pointer"
             />
           </Link>
-        </div>
-
-        <div className="hidden md:flex items-center gap-6">
-          <Link href="/ride">
-            <span className="hover:underline cursor-pointer">Ride</span>
-          </Link>
-          <Link href="/drive">
-            <span className="hover:underline cursor-pointer">Drive</span>
-          </Link>
-        </div>
-
-        <div className="hidden md:flex items-center gap-6 z-10">
-          {!isAuth ? (
-            <>
-              <Link href="/sign-in">
-                <span className="hover:underline cursor-pointer">Login</span>
-              </Link>
-              <Link href="/sign-up">
-                <span className="hover:underline cursor-pointer">Sign Up</span>
-              </Link>
-            </>
-          ) : (
-            <>
-              <Link href="/profile">
-                <span className="hover:underline cursor-pointer">Profile</span>
-              </Link>
-              <UserButton afterSignOutUrl="/" />
-            </>
-          )}
-        </div>
-
-        <div className="md:hidden relative">
-          <input type="checkbox" id="menu-toggle" className="hidden peer" />
-          <label
-            htmlFor="menu-toggle"
-            className="cursor-pointer"
-            aria-label="Toggle Menu"
+          <nav
+            className={`md:flex ${
+              isOpen ? "block" : "hidden"
+            } fixed md:relative bg-black w-full md:w-auto top-16 md:top-0 left-0 z-10 h-full`}
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6 peer-checked:hidden"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M4 6h16M4 12h16m-7 6h7"
-              />
-            </svg>
-
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6 hidden peer-checked:block"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </label>
-
-          <div className="hidden peer-checked:flex flex-col items-center absolute top-full right-0 rounded-b-lg bg-neutral-800 text-white p-4 gap-4">
-            <Link href="/ride">
-              <span className="hover:underline cursor-pointer">Ride</span>
-            </Link>
-            <Link href="/drive">
-              <span className="hover:underline cursor-pointer">Drive</span>
-            </Link>
-
-            {!isAuth ? (
-              <>
-                <Link href="/sign-in">
-                  <span className="hover:underline cursor-pointer">Login</span>
-                </Link>
-                <Link href="/sign-up">
-                  <span className="hover:underline cursor-pointer">
-                    Sign Up
-                  </span>
-                </Link>
-              </>
-            ) : (
-              <>
-                <Link href="/profile">
-                  <span className="hover:underline cursor-pointer">
-                    Profile
-                  </span>
-                </Link>
-                <UserButton afterSignOutUrl="/" />
-              </>
-            )}
-          </div>
+            <ul className="flex flex-col md:flex-row gap-6 list-none p-4 md:p-0">
+              <Link href="/ride" passHref>
+                <li className="hover:underline cursor-pointer">Ride</li>
+              </Link>
+              <Link href="/drive" passHref>
+                <li className="hover:underline cursor-pointer">Drive</li>
+              </Link>
+              {!isSignedIn ? (
+                <>
+                  <Link href="/sign-in">
+                    <li className="hover:underline cursor-pointer">Login</li>
+                  </Link>
+                  <Link href="/sign-up">
+                    <li className="hover:underline cursor-pointer">Sign Up</li>
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link href="/profile">
+                    <li className="hover:underline cursor-pointer">Profile</li>
+                  </Link>
+                  <li>
+                    <SignOutButton>
+                      <button className="hover:underline cursor-pointer">
+                        Sign out
+                      </button>
+                    </SignOutButton>
+                  </li>
+                </>
+              )}
+            </ul>
+          </nav>
         </div>
+
+        <button onClick={toggleMenu} className="md:hidden text-white">
+          {isOpen ? "✖" : "☰"}
+        </button>
       </div>
     </header>
   );

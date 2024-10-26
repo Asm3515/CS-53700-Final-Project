@@ -34,10 +34,11 @@ export default function Home() {
 
       <div className="flex flex-col md:flex-row bg-white text-black p-8 md:p-16 md:mx-8 items-center gap-10 rounded-lg shadow-lg">
         <div className="flex-1 text-center md:text-left">
-          <h2 className="text-3xl font-semibold">Find Riders Quickly</h2>
+          <h2 className="text-3xl font-semibold">
+            Quickly Connect with Riders
+          </h2>
           <p className="mt-2 text-lg">
-            Connect with students heading your way in just a few clicks and save
-            on gas!
+            Join Our Community for Affordable Rides That Help Everyone
           </p>
         </div>
         <div className="flex-1 mt-4 md:mt-0">
@@ -60,8 +61,8 @@ export default function Home() {
         <div className="flex-1 text-center md:text-left">
           <h2 className="text-3xl font-semibold">Save on Fuel Costs</h2>
           <p className="mt-2 text-lg">
-            Join our community and make your rides affordable while helping
-            others.
+            Connect with students heading your way in just a few clicks and save
+            on gas!
           </p>
         </div>
       </div>
