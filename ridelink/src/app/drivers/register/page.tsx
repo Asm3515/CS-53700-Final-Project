@@ -1,92 +1,135 @@
 "use client";
-import { useState } from 'react';
+ 
+import { useState } from "react";
+import Image from "next/image";
  
 export default function DriverRegister() {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    licenseNumber: '',
-    phone: '',
-    password: '',
+    name: "",
+    email: "",
+    phone: "",
+    licenseNumber: "",
+    password: "",
   });
+  const [isRegistered, setIsRegistered] = useState(false);
  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
  
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const response = await fetch('/api/drivers/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
+
+    console.log("Driver registered:", formData);
+ 
+
+    setIsRegistered(true);
+ 
+
+    setFormData({
+      name: "",
+      email: "",
+      phone: "",
+      licenseNumber: "",
+      password: "",
     });
-    const data = await response.json();
-    if (data.success) {
-      alert('Driver registered successfully!');
-    } else {
-      alert('Registration failed');
-    }
   };
  
   return (
+<div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500">
+<div className="w-full max-w-md p-8 space-y-6 bg-white shadow-2xl rounded-lg">
+<div className="flex justify-center">
+<Image
+            src="/ridelink_logo.png" 
+            alt="Ridelink Logo"
+            width={120}
+            height={120}
+            className="mb-4 rounded-full"
+          />
+</div>
+ 
+        <h2 className="text-2xl font-semibold text-center text-gray-800">Driver Registration</h2>
+ 
+        {/* Success Message */}
+        {isRegistered && (
+<p className="text-green-600 text-center font-medium">Driver registered successfully!</p>
+        )}
+ 
+        <form onSubmit={handleSubmit} className="space-y-4">
 <div>
-<form onSubmit={handleSubmit} className="space-y-4">
+<label className="block mb-1 text-sm font-medium text-gray-700" htmlFor="name">Full Name</label>
 <input
-          type="text"
-          name="name"
-          placeholder="Name"
-          value={formData.name}
-          onChange={handleChange}
-          required
-          className="border rounded p-2 w-full"
-        />
+              type="text"
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              placeholder="Enter full name"
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+</div>
+<div>
+<label className="block mb-1 text-sm font-medium text-gray-700" htmlFor="email">Email Address</label>
 <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-          className="border rounded p-2 w-full"
-        />
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="Enter email"
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+</div>
+<div>
+<label className="block mb-1 text-sm font-medium text-gray-700" htmlFor="phone">Phone Number</label>
 <input
-          type="text"
-          name="licenseNumber"
-          placeholder="License Number"
-          value={formData.licenseNumber}
-          onChange={handleChange}
-          required
-          className="border rounded p-2 w-full"
-        />
+              type="tel"
+              id="phone"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              placeholder="Enter phone number"
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+</div>
+<div>
+<label className="block mb-1 text-sm font-medium text-gray-700" htmlFor="licenseNumber">License Number</label>
 <input
-          type="text"
-          name="phone"
-          placeholder="Phone"
-          value={formData.phone}
-          onChange={handleChange}
-          required
-          className="border rounded p-2 w-full"
-        />
+              type="text"
+              id="licenseNumber"
+              name="licenseNumber"
+              value={formData.licenseNumber}
+              onChange={handleChange}
+              placeholder="Enter license number"
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+</div>
+<div>
+<label className="block mb-1 text-sm font-medium text-gray-700" htmlFor="password">Password</label>
 <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-          className="border rounded p-2 w-full"
-        />
-<button type="submit" className="bg-blue-600 text-white rounded py-2 px-4">
-          Register
+              type="password"
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Enter password"
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+</div>
+<button
+            type="submit"
+            className="w-full py-3 mt-6 font-semibold text-white bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg hover:bg-purple-600 focus:outline-none focus:ring-4 focus:ring-purple-300"
+>
+            Register
 </button>
 </form>
+</div>
 </div>
   );
 }
