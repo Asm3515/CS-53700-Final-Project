@@ -26,7 +26,7 @@ const Footer = () => {
           <Link href="/" passHref>
             <img
               src="/ridelink-logo-black.webp"
-              alt="Company Logo"
+              alt="RideLink logo"
               className="h-10 w-auto cursor-pointer"
             />
           </Link>
