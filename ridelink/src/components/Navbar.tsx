@@ -41,7 +41,7 @@ const Navbar = () => {
               <Link href="/ride" passHref>
                 <li className="hover:underline cursor-pointer">Ride</li>
               </Link>
-              <Link href="/drive" passHref>
+              <Link href="/drivers" passHref>
                 <li className="hover:underline cursor-pointer">Drive</li>
               </Link>
               {!isSignedIn ? (
