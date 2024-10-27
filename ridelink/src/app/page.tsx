@@ -1,13 +1,14 @@
-import Link from "next/link"; 
+import Link from "next/link";
 import {
   SignedIn,
   SignedOut,
   SignInButton,
   SignOutButton,
 } from "@clerk/nextjs";
-import Image from "next/image";
- 
-export default function Home() {
+import { auth } from "@clerk/nextjs/server";
+
+export default async function Home() {
+  const { userId } = await auth();
   return (
     <div className="bg-black text-white min-h-screen gap-8 flex flex-col justify-between">
       <div className="flex flex-col  md:flex-row items-center justify-between p-8 md:p-16">
@@ -18,11 +19,19 @@ export default function Home() {
           <p className="mt-4 text-lg md:text-xl">
             Ride when you need, connect with ease.
           </p>
-          <SignInButton>
-            <button className="mt-6 bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-4 rounded shadow transition">
-              Get Started
-            </button>
-          </SignInButton>
+          {userId ? (
+            <Link href="/ride">
+              <button className="mt-6 bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-4 rounded shadow transition">
+                Get Started
+              </button>
+            </Link>
+          ) : (
+            <SignInButton>
+              <button className="mt-6 bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-4 rounded shadow transition">
+                Get Started
+              </button>
+            </SignInButton>
+          )}
         </div>
         <div className="mt-8 md:mt-0 md:flex-1">
           <img
