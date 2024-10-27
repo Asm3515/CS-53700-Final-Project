@@ -8,24 +8,25 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
+// Fix for Leaflet's default icon paths
+import markerIcon from 'leaflet/dist/images/marker-icon.png';
+import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+
+// @ts-ignore - Bypass TypeScript error for Leaflet internal property
+delete L.Icon.Default.prototype._getIconUrl;
+
+L.Icon.Default.mergeOptions({
+  iconUrl: markerIcon,
+  shadowUrl: markerShadow,
+});
+
 export default function RidersPage() {
   const [pickup, setPickup] = useState('');
   const [dropoff, setDropoff] = useState('');
   const [pickupTime, setPickupTime] = useState('now');
   const [forMe, setForMe] = useState(true);
-  const [currentLocation, setCurrentLocation] = useState([51.505, -0.09]); // Default to London coordinates
+  const [currentLocation, setCurrentLocation] = useState<[number, number]>([51.505, -0.09]);
   const [isLoading, setIsLoading] = useState(true);
-
-  // Custom marker icon for Leaflet
-  const customMarkerIcon = new L.Icon({
-    iconUrl: 'https://leafletjs.com/examples/custom-icons/leaf-green.png',
-    shadowUrl: 'https://leafletjs.com/examples/custom-icons/leaf-shadow.png',
-    iconSize: [38, 95],
-    shadowSize: [50, 64],
-    iconAnchor: [22, 94],
-    shadowAnchor: [4, 62],
-    popupAnchor: [-3, -76],
-  });
 
   // Get user's current location
   useEffect(() => {
@@ -115,7 +116,7 @@ export default function RidersPage() {
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               attribution="&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors"
             />
-            <Marker position={currentLocation} icon={customMarkerIcon}>
+            <Marker position={currentLocation}>
               <Popup>Your Current Location</Popup>
             </Marker>
           </MapContainer>
@@ -126,5 +127,3 @@ export default function RidersPage() {
     </div>
   );
 }
-
-

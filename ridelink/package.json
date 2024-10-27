@@ -27,6 +27,7 @@
     "uuidv4": "^6.2.13"
   },
   "devDependencies": {
+    "@types/leaflet": "^1.9.14",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
