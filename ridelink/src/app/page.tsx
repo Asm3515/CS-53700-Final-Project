@@ -1,3 +1,4 @@
+import Link from "next/link"; 
 import {
   SignedIn,
   SignedOut,
@@ -5,7 +6,7 @@ import {
   SignOutButton,
 } from "@clerk/nextjs";
 import Image from "next/image";
-
+ 
 export default function Home() {
   return (
     <div className="bg-black text-white min-h-screen gap-8 flex flex-col justify-between">
