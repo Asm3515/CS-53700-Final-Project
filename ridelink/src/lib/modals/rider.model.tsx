@@ -1,11 +1,11 @@
 import { Schema, model, models } from "mongoose";
 
 const RiderSchema = new Schema({
-    user: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
+    clerkId: {
+        type: String,
+        ref: "User",
+        required: true,
+      },
     vehicleDetails: {
       type: String, // Example: "Toyota Prius, 2018"
     },
