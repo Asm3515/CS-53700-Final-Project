@@ -4,30 +4,34 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import dynamic from 'next/dynamic';
 import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
 
-// Fix for Leaflet's default icon paths
-import markerIcon from 'leaflet/dist/images/marker-icon.png';
-import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+// Dynamically import `MapContainer`, `TileLayer`, and `Marker` to avoid SSR issues
+const MapContainer = dynamic(() => import('react-leaflet').then((mod) => mod.MapContainer), { ssr: false });
+const TileLayer = dynamic(() => import('react-leaflet').then((mod) => mod.TileLayer), { ssr: false });
+const Marker = dynamic(() => import('react-leaflet').then((mod) => mod.Marker), { ssr: false });
+const Popup = dynamic(() => import('react-leaflet').then((mod) => mod.Popup), { ssr: false });
+const L = typeof window !== 'undefined' ? require('leaflet') : null;
 
-// Conditionally execute Leaflet setup if on the client
-if (typeof window !== "undefined") {
-  delete (L.Icon.Default.prototype as any)._getIconUrl; // add `as any` for TypeScript compatibility
-  L.Icon.Default.mergeOptions({
-    iconUrl: markerIcon,
-    shadowUrl: markerShadow,
-  });
-}
-
-export default function RidersPage() {
+export default function FindRidePage() {
   const [pickup, setPickup] = useState('');
   const [dropoff, setDropoff] = useState('');
   const [pickupTime, setPickupTime] = useState('now');
   const [forMe, setForMe] = useState(true);
-  const [currentLocation, setCurrentLocation] = useState<[number, number]>([51.505, -0.09]);
+  const [currentLocation, setCurrentLocation] = useState<[number, number]>([51.505, -0.09]); // Default coordinates
   const [isLoading, setIsLoading] = useState(true);
+
+  // Set up custom icon only if Leaflet and window are available
+  useEffect(() => {
+    if (typeof window !== "undefined" && L) {
+      delete L.Icon.Default.prototype._getIconUrl;
+      L.Icon.Default.mergeOptions({
+        iconUrl: 'https://leafletjs.com/examples/custom-icons/leaf-green.png',
+        shadowUrl: 'https://leafletjs.com/examples/custom-icons/leaf-shadow.png',
+      });
+    }
+  }, []);
 
   // Get user's current location only on the client side
   useEffect(() => {
