@@ -1,5 +1,5 @@
 // Main page for Rider functionality
-// src/app/riders/page.tsx
+// src/app/findRide/page.tsx
 
 "use client";
 
@@ -12,13 +12,14 @@ import L from 'leaflet';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 
-// @ts-ignore - Bypass TypeScript error for Leaflet internal property
-delete L.Icon.Default.prototype._getIconUrl;
-
-L.Icon.Default.mergeOptions({
-  iconUrl: markerIcon,
-  shadowUrl: markerShadow,
-});
+// Conditionally execute Leaflet setup if on the client
+if (typeof window !== "undefined") {
+  delete (L.Icon.Default.prototype as any)._getIconUrl; // add `as any` for TypeScript compatibility
+  L.Icon.Default.mergeOptions({
+    iconUrl: markerIcon,
+    shadowUrl: markerShadow,
+  });
+}
 
 export default function RidersPage() {
   const [pickup, setPickup] = useState('');

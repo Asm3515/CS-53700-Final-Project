@@ -1,6 +1,6 @@
 // Component for booking a ride
 
-// src/app/riders/RideBooking.tsx
+// src/app/findRide/RideBooking.tsx
 
 import React, { useState } from 'react';
 

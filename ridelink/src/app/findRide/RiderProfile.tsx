@@ -1,6 +1,6 @@
 //Component for displaying rider profile details
 
-// src/app/riders/RiderProfile.tsx
+// src/app/findRide/RiderProfile.tsx
 
 import React from 'react';
 

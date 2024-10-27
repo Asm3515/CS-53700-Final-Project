@@ -1,6 +1,6 @@
 //Component for fare estimation
 
-// src/app/riders/FareEstimator.tsx
+// src/app/findRide/FareEstimator.tsx
 
 import React, { useState } from 'react';
 
