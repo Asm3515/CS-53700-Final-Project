@@ -28,9 +28,9 @@ export default function RidersPage() {
   const [currentLocation, setCurrentLocation] = useState<[number, number]>([51.505, -0.09]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Get user's current location
+  // Get user's current location only on the client side
   useEffect(() => {
-    if (navigator.geolocation) {
+    if (typeof window !== "undefined" && navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           setCurrentLocation([position.coords.latitude, position.coords.longitude]);
