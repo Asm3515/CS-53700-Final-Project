@@ -38,7 +38,7 @@ const Navbar = () => {
             } fixed md:relative bg-black w-full md:w-auto top-16 md:top-0 left-0 z-10 h-full`}
           >
             <ul className="flex flex-col md:flex-row gap-6 list-none p-4 md:p-0">
-              <Link href="/ride" passHref>
+              <Link href="/riders" passHref>
                 <li className="hover:underline cursor-pointer">Ride</li>
               </Link>
               <Link href="/drivers" passHref>
