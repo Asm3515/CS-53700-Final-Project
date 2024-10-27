@@ -5,7 +5,8 @@
 import React, { useState } from 'react';
 
 const FareEstimator = () => {
-  const [fare, setFare] = useState(null);
+  // Set initial state to `null` or `string` type
+  const [fare, setFare] = useState<string | null>(null);
 
   const calculateFare = () => {
     const estimatedFare = Math.random() * 20 + 5; // Mock fare calculation
@@ -30,5 +31,6 @@ const FareEstimator = () => {
 };
 
 export default FareEstimator;
+
 
 
