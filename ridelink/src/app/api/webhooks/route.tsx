@@ -11,24 +11,24 @@ export async function POST(req: Request) {
   if (!WEBHOOK_SECRET) {
     throw new Error('Please add WEBHOOK_SECRET from Clerk Dashboard to .env or .env.local');
   }
-
+  
   // Get headers
   const headerPayload = headers();
   const svix_id = headerPayload.get('svix-id');
   const svix_timestamp = headerPayload.get('svix-timestamp');
   const svix_signature = headerPayload.get('svix-signature');
-
+  
   // Validate headers
   if (!svix_id || !svix_timestamp || !svix_signature) {
     console.error('Missing Svix headers');
     return new Response('Error occurred -- no svix headers', { status: 400 });
   }
-
+  
   // Get payload
   const payload = await req.json();
   const body = JSON.stringify(payload);
   console.log('Received webhook payload:', body);
-
+  
   // Verify webhook signature
   const wh = new Webhook(WEBHOOK_SECRET);
   let evt: WebhookEvent;
@@ -42,9 +42,36 @@ export async function POST(req: Request) {
     console.error('Error verifying webhook:', err);
     return new Response('Error verifying webhook signature', { status: 400 });
   }
+  
+  // Type guard to check if the event is a user event
+  const isUserEvent = (
+    evt.data && 
+    typeof evt.data === 'object' && 
+    'id' in evt.data && 
+    'email_addresses' in evt.data
+  );
 
-  // Handle different event types
-  const { id, email_addresses, image_url, first_name, last_name, username } = evt.data;
+  if (!isUserEvent) {
+    return NextResponse.json({ message: "Not a user event" }, { status: 400 });
+  }
+
+  // Now safely destructure with type assertion
+  const { 
+    id, 
+    email_addresses, 
+    image_url, 
+    first_name, 
+    last_name, 
+    username 
+  } = evt.data as {
+    id: string;
+    email_addresses: { email_address: string }[];
+    image_url: string;
+    first_name: string;
+    last_name: string;
+    username: string;
+  };
+
   const eventType = evt.type;
   
   try {
@@ -64,7 +91,7 @@ export async function POST(req: Request) {
         return NextResponse.json({ message: "New user created", user: newUser }, { status: 201 });
       }
     }
-
+    
     if (eventType === "user.deleted") {
       console.log(`Deleting user with Clerk ID: ${id}`);
       const isDeleted = await deleteUser(id);
@@ -74,7 +101,7 @@ export async function POST(req: Request) {
         return NextResponse.json({ message: 'User not found or already deleted' }, { status: 404 });
       }
     }
-
+    
     if (eventType === "user.updated") {
       const userUpdated = {
         clerkId: id,
@@ -88,11 +115,13 @@ export async function POST(req: Request) {
       const updatedUser = await updateUser(id, userUpdated);
       return NextResponse.json({ message: "User updated successfully", user: updatedUser });
     }
-
   } catch (error) {
     console.error('Error processing webhook event:', error);
-    return NextResponse.json({ message: "Error processing webhook", error: error.message }, { status: 500 });
+    return NextResponse.json({ 
+      message: "Error processing webhook", 
+      error: error instanceof Error ? error.message : 'Unknown error' 
+    }, { status: 500 });
   }
-
+  
   return new Response('', { status: 200 });
 }
