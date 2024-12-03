@@ -69,9 +69,10 @@ export const POST = async (request: NextRequest) => {
       );
     }
 
+
     // Calculate average rating if ratings are provided
     const averageRating = ratings && ratings.length > 0
-      ? ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length
+      ? ratings.reduce((sum: number, rating: number) => sum + rating, 0) / ratings.length
       : 0;
 
     const newRider = await Rider.create({
@@ -118,7 +119,7 @@ export const PATCH = async (request: NextRequest) => {
 
     // Calculate new average rating if ratings are provided
     const newAverageRating = ratings && ratings.length > 0
-      ? ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length
+      ? ratings.reduce((sum: number, rating: number) => sum + rating, 0) / ratings.length
       : existingRider.averageRating;
 
     const updatedRider = await Rider.findOneAndUpdate(
