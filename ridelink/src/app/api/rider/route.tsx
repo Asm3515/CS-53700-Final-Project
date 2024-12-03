@@ -1,14 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connect } from "@/lib/db";
 import Rider from "@/lib/modals/rider.model";
-import User from "@/lib/modals/user.model";
-import { request } from "http";
-import { createECDH } from "crypto";
+import User from "@/lib/modals/user.model"; // Assuming your User model is here
 
 // GET handler to fetch Rider by clerkId
 export const GET = async (request: NextRequest) => {
   try {
-    // Parse query parameters from the request URL
     const { searchParams } = new URL(request.url);
     const clerkId = searchParams.get("clerkId");
 
@@ -21,7 +18,6 @@ export const GET = async (request: NextRequest) => {
 
     await connect();
 
-    // Find the rider based on the clerkId
     const rider = await Rider.findOne({ clerkId });
 
     if (!rider) {
@@ -40,17 +36,12 @@ export const GET = async (request: NextRequest) => {
   }
 };
 
-
-
-/**
- * Create a new Rider with clerkId.
- */
-export const POST = async (request: Request) => {
+// POST handler to create a new Rider
+export const POST = async (request: NextRequest) => {
   try {
     const body = await request.json();
-    const { clerkId, vehicleDetails, availability, ratings, status } = body;
+    const { clerkId, vehicleDetails, availability, ratings, status, verified } = body;
 
-    // Validate required fields
     if (!clerkId) {
       return NextResponse.json(
         { message: "clerkId is required" },
@@ -58,10 +49,18 @@ export const POST = async (request: Request) => {
       );
     }
 
-    // Connect to the database
     await connect();
 
-    // Check if the Rider with the given clerkId already exists
+    // Check if the User exists
+    const userExists = await User.findOne({ clerkId });
+    if (!userExists) {
+      return NextResponse.json(
+        { message: "User with given clerkId does not exist" },
+        { status: 404 }
+      );
+    }
+
+    // Check if the Rider already exists
     const existingRider = await Rider.findOne({ clerkId });
     if (existingRider) {
       return NextResponse.json(
@@ -70,16 +69,21 @@ export const POST = async (request: Request) => {
       );
     }
 
-    // Create a new Rider
+    // Calculate average rating if ratings are provided
+    const averageRating = ratings && ratings.length > 0
+      ? ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length
+      : 0;
+
     const newRider = await Rider.create({
       clerkId,
       vehicleDetails,
       availability,
       ratings,
-      status,
+      averageRating,
+      status: status || "Inactive", // Default to Inactive if not provided
+      verified: verified || false,   // Default to false if not provided
     });
 
-    // Return the created rider as a response
     return NextResponse.json(newRider, { status: 201 });
   } catch (error) {
     return NextResponse.json(
@@ -89,16 +93,12 @@ export const POST = async (request: Request) => {
   }
 };
 
-
-/**
- * Update an existing Rider based on the clerkId.
- */
+// PATCH handler to update an existing Rider
 export const PATCH = async (request: NextRequest) => {
   try {
     const body = await request.json();
-    const { clerkId, vehicleDetails, availability, ratings, status } = body;
+    const { clerkId, vehicleDetails, availability, ratings, status, verified } = body;
 
-    // Validate required fields
     if (!clerkId) {
       return NextResponse.json(
         { message: "clerkId is required" },
@@ -108,7 +108,6 @@ export const PATCH = async (request: NextRequest) => {
 
     await connect();
 
-    // Find the Rider based on clerkId
     const existingRider = await Rider.findOne({ clerkId });
     if (!existingRider) {
       return NextResponse.json(
@@ -117,11 +116,22 @@ export const PATCH = async (request: NextRequest) => {
       );
     }
 
-    // Update the Rider details
+    // Calculate new average rating if ratings are provided
+    const newAverageRating = ratings && ratings.length > 0
+      ? ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length
+      : existingRider.averageRating;
+
     const updatedRider = await Rider.findOneAndUpdate(
       { clerkId },
-      { vehicleDetails, availability, ratings, status },
-      { new: true, runValidators: true } // Options: return updated document, run validators
+      {
+        vehicleDetails,
+        availability,
+        ratings,
+        averageRating: newAverageRating, // Update the average rating
+        status,
+        verified, // Update the verified field
+      },
+      { new: true, runValidators: true }
     );
 
     return NextResponse.json(updatedRider, { status: 200 });
@@ -133,13 +143,9 @@ export const PATCH = async (request: NextRequest) => {
   }
 };
 
-
-/**
- * Delete an existing Rider based on the clerkId.
- */
+// DELETE handler to delete an existing Rider by clerkId
 export const DELETE = async (request: NextRequest) => {
   try {
-    // Parse query parameters from the request URL
     const { searchParams } = new URL(request.url);
     const clerkId = searchParams.get("clerkId");
 
@@ -152,7 +158,6 @@ export const DELETE = async (request: NextRequest) => {
 
     await connect();
 
-    // Find the Rider based on clerkId
     const existingRider = await Rider.findOne({ clerkId });
     if (!existingRider) {
       return NextResponse.json(
@@ -161,7 +166,6 @@ export const DELETE = async (request: NextRequest) => {
       );
     }
 
-    // Delete the Rider
     await Rider.deleteOne({ clerkId });
 
     return NextResponse.json(
