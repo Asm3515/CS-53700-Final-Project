@@ -1,18 +1,12 @@
-// Main page for Rider functionality
-// src/app/findRide/page.tsx
-
-"use client";
+"use client"
 
 import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import 'leaflet/dist/leaflet.css';
+import axios from 'axios';
+import 'mapbox-gl/dist/mapbox-gl.css';
 
-// Dynamically import `MapContainer`, `TileLayer`, and `Marker` to avoid SSR issues
-const MapContainer = dynamic(() => import('react-leaflet').then((mod) => mod.MapContainer), { ssr: false });
-const TileLayer = dynamic(() => import('react-leaflet').then((mod) => mod.TileLayer), { ssr: false });
-const Marker = dynamic(() => import('react-leaflet').then((mod) => mod.Marker), { ssr: false });
-const Popup = dynamic(() => import('react-leaflet').then((mod) => mod.Popup), { ssr: false });
-const L = typeof window !== 'undefined' ? require('leaflet') : null;
+// Dynamically import the Map component to avoid SSR issues
+const Map = dynamic(() => import('react-map-gl').then((mod) => mod.Map), { ssr: false });
 
 export default function FindRidePage() {
   const [pickup, setPickup] = useState('');
@@ -21,17 +15,27 @@ export default function FindRidePage() {
   const [forMe, setForMe] = useState(true);
   const [currentLocation, setCurrentLocation] = useState<[number, number]>([51.505, -0.09]); // Default coordinates
   const [isLoading, setIsLoading] = useState(true);
+  const [geocodeResult, setGeocodeResult] = useState(null); // Store geocode result
 
-  // Set up custom icon only if Leaflet and window are available
-  useEffect(() => {
-    if (typeof window !== "undefined" && L) {
-      delete L.Icon.Default.prototype._getIconUrl;
-      L.Icon.Default.mergeOptions({
-        iconUrl: 'https://leafletjs.com/examples/custom-icons/leaf-green.png',
-        shadowUrl: 'https://leafletjs.com/examples/custom-icons/leaf-shadow.png',
-      });
+  const MAPBOX_ACCESS_TOKEN = 'YOUR_MAPBOX_ACCESS_TOKEN'; // Add your Mapbox access token here
+
+  // Fetch geocode information from Mapbox when pickup location is set
+  const fetchGeocode = async (location: string) => {
+    try {
+      const response = await axios.get(
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(location)}.json`,
+        {
+          params: {
+            access_token: MAPBOX_ACCESS_TOKEN
+          }
+        }
+      );
+      console.log(response.data);
+      setGeocodeResult(response.data);
+    } catch (error) {
+      console.error('Error fetching geocode:', error);
     }
-  }, []);
+  };
 
   // Get user's current location only on the client side
   useEffect(() => {
@@ -49,12 +53,19 @@ export default function FindRidePage() {
     }
   }, []);
 
+  // Fetch geocode for pickup location when it changes
+  useEffect(() => {
+    if (pickup) {
+      fetchGeocode(pickup);
+    }
+  }, [pickup]);
+
   return (
     <div className="flex flex-col md:flex-row min-h-screen p-4 md:p-8 bg-gray-100 gap-6">
       {/* Left Side: Form for Ride Details */}
       <div className="w-full md:w-1/3 bg-white rounded-lg shadow-lg p-6">
         <h2 className="text-2xl font-semibold mb-4">Find a trip</h2>
-        
+
         {/* Pickup Location */}
         <div className="mb-4">
           <label className="block text-gray-700 mb-2">Pick-up location</label>
@@ -116,15 +127,13 @@ export default function FindRidePage() {
       {/* Right Side: Map Display */}
       <div className="w-full md:w-2/3 h-96 md:h-full rounded-lg shadow-lg overflow-hidden">
         {!isLoading ? (
-          <MapContainer center={currentLocation} zoom={13} className="w-full h-full">
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution="&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors"
-            />
-            <Marker position={currentLocation}>
-              <Popup>Your Current Location</Popup>
-            </Marker>
-          </MapContainer>
+          <Map
+            latitude={currentLocation[0]}
+            longitude={currentLocation[1]}
+            zoom={13}
+            mapboxAccessToken={MAPBOX_ACCESS_TOKEN}
+            style={{ width: '100%', height: '100%' }} // Use CSS for width/height
+          />
         ) : (
           <p className="text-center mt-6">Loading map...</p>
         )}
