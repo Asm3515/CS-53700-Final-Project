@@ -6,9 +6,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
 
-
 // Dynamically import AddressAutofill with correct types
-
 const AddressAutofill = dynamic(
   () => import("@mapbox/search-js-react").then((mod) => mod.AddressAutofill),
   {
@@ -23,7 +21,7 @@ export default function FindRidePage() {
   const [pickupCoordinates, setPickupCoordinates] = useState<[number, number]>();
   const [dropoffCoordinates, setDropoffCoordinates] = useState<[number, number]>();
   const [dateTime, setDateTime] = useState("");
-  const { userId } = useAuth(); 
+  const { userId } = useAuth();
   const router = useRouter();
 
   const handleGeocode = async (location: string) => {
@@ -52,7 +50,7 @@ export default function FindRidePage() {
         createdBy: "passenger",
         passengers: [
           {
-            clerkId: userId, // Example user
+            clerkId: userId,
             pickupLocation: pickupData.placeName,
             dropoffLocation: dropoffData.placeName,
             pickupCoordinates: pickupData.coordinates,
@@ -86,49 +84,49 @@ export default function FindRidePage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen p-8 bg-gray-100 gap-6">
-      <div className="w-full max-w-md mx-auto bg-white rounded-lg shadow-lg p-6">
-        <h2 className="text-2xl font-semibold mb-4">Find a Ride</h2>
+    <div className="flex flex-col min-h-screen p-8 bg-black text-white gap-6">
+      <div className="w-full max-w-lg mx-auto bg-gray-800 text-white rounded-lg shadow-lg p-6">
+        <h2 className="text-2xl font-bold mb-6">Find a Ride</h2>
 
-        <div className="mb-4">
-          <label className="block text-gray-700 mb-2">Pick-up Location</label>
+        <div className="mb-6">
+          <label className="block text-gray-300 mb-2">Pick-up Location</label>
           <AddressAutofill accessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN!}>
             <input
               type="text"
               value={pickup}
               onChange={(e) => setPickup(e.target.value)}
               placeholder="Enter pick-up location"
-              className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+              className="w-full p-3 rounded-md border border-gray-600 bg-gray-900 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500"
             />
           </AddressAutofill>
         </div>
 
-        <div className="mb-4">
-          <label className="block text-gray-700 mb-2">Drop-off Location</label>
+        <div className="mb-6">
+          <label className="block text-gray-300 mb-2">Drop-off Location</label>
           <AddressAutofill accessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN!}>
             <input
               type="text"
               value={dropoff}
               onChange={(e) => setDropoff(e.target.value)}
               placeholder="Enter drop-off location"
-              className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+              className="w-full p-3 rounded-md border border-gray-600 bg-gray-900 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500"
             />
           </AddressAutofill>
         </div>
 
-        <div className="mb-4">
-          <label className="block text-gray-700 mb-2">Date and Time</label>
+        <div className="mb-6">
+          <label className="block text-gray-300 mb-2">Date and Time</label>
           <input
             type="datetime-local"
             value={dateTime}
             onChange={(e) => setDateTime(e.target.value)}
-            className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+            className="w-full p-3 rounded-md border border-gray-600 bg-gray-900 text-white focus:outline-none focus:ring-2 focus:ring-yellow-500"
           />
         </div>
 
         <button
           onClick={handleSubmit}
-          className="w-full py-3 bg-yellow-500 text-black font-bold rounded-lg shadow-lg hover:bg-yellow-600 transition"
+          className="w-full py-3 bg-yellow-500 text-black font-bold rounded-md shadow-md hover:bg-yellow-600 transition duration-300"
         >
           Create Ride
         </button>
