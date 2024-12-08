@@ -49,22 +49,8 @@ const DriverDashboard = () => {
     }
   };
 
-  const handleDeleteRide = async (rideId: string, passengers: string[]) => {
-    if (passengers.length === 0) {
-      try {
-        await axios.delete(`/api/rides?rideId=${rideId}`);
-        fetchRides();
-      } catch (error) {
-        setError("Error deleting ride.");
-      }
-    } else {
-      try {
-        await axios.delete(`/api/rides?rideId=${rideId}&driverId=${userId}`);
-        fetchRides();
-      } catch (error) {
-        setError("Error removing Driver from ride.");
-      }
-    }
+  const handleCreateRide = () => {
+    router.push("/drivers/searchRide"); // Navigate to the create ride page
   };
 
   if (loading) {
@@ -80,6 +66,15 @@ const DriverDashboard = () => {
     <div className="p-6 bg-black text-white">
       <h2 className="text-xl font-bold mb-4">Driver Dashboard</h2>
       {error && <p className="text-red-500 mb-4">{error}</p>}
+      
+      {/* Create Ride Button */}
+      <button
+        onClick={handleCreateRide}
+        className="bg-blue-500 p-2 rounded-md mb-4"
+      >
+        Search rides to offer
+      </button>
+
       {rides.length === 0 ? (
         <p>No rides found for this Driver.</p>
       ) : (
@@ -88,7 +83,6 @@ const DriverDashboard = () => {
             <RideCard
               key={ride.rideId}
               ride={ride}
-              handleDeleteRide={handleDeleteRide}
             />
           ))}
         </ul>

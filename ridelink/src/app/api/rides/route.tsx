@@ -534,6 +534,14 @@ export const PATCH = async (request: NextRequest) => {
     );
   }
 };
+/**
+ * Update a ride by adding/removing a rider or passenger
+ */
+/**
+ * Update a ride by adding/removing a rider or passenger
+ */
+
+
 
 /**
  * Delete a ride
