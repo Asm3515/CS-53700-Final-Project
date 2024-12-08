@@ -76,7 +76,7 @@ export default function FindRidePage() {
       await axios.post(backendUrl, rideRequest);
 
       alert("Ride created successfully!");
-      router.push("http://localhost:3000/passenger/dashboard");
+      router.push("/passenger/dashboard");
     } catch (error) {
       console.error("Error creating ride:", error);
       alert("Failed to create the ride. Please try again.");
