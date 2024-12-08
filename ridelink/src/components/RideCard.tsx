@@ -23,7 +23,7 @@ const RideCard: React.FC<RideCardProps> = ({ ride }) => {
   const geoApiUrl = `https://maps.geoapify.com/v1/staticmap?style=osm-bright-smooth&width=600&height=400&center=lonlat:${destinationLongitude},${destinationLatitude}&zoom=14&apiKey=${apiKey}`;
 
   return (
-    <li className="p-4 border rounded-md bg-gray-800 shadow-sm flex">
+    <li className="p-4 border rounded-lg bg-gray-800 shadow-sm flex flex-col md:flex-row hover:shadow-lg hover:bg-gray-700 hover:scale-105 transition-all duration-300 ease-in-out ">
       {/* Map on the left side */}
       <div className="w-1/2 pr-4">
         <img
