@@ -8,10 +8,10 @@ const Footer = () => {
 
       <div className="row-start-3 flex flex-col items-center p-6 sm:p-12 md:px-16 md:py-8 bg-black text-white md:flex-row md:justify-between">
         <div className="flex flex-col items-center gap-2 mb-4 md:mb-0 md:items-start">
-          <a href="/book-ride" className="text-lg hover:underline">
+          <a href="/passenger/dashboard" className="text-lg hover:underline">
             Book a Ride
           </a>
-          <a href="/give-ride" className="text-lg hover:underline">
+          <a href="/drivers/dashboard" className="text-lg hover:underline">
             Give a Ride
           </a>
         </div>
