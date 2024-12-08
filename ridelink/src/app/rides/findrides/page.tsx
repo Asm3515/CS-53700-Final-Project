@@ -5,12 +5,14 @@ import { useRouter } from "next/navigation";
 import { Ride } from "../../../components/Types/RideType";
 import RideCard from "../../../components/RideCard"; // Import the RideCard component
 import { useAuth } from "@clerk/nextjs";
+import SearchBar from "../../../components/SearchBar"; // Import the SearchBar component
 
-const ridesApiUrl = "/api/rides";
+const ridesApiUrl = "/api/rides"; // API endpoint to fetch all rides
 
 const AllRidesPage: React.FC = () => {
-  const { userId } = useAuth();
+  const { userId } = useAuth(); // Get the authenticated user from Clerk
   const [rides, setRides] = useState<Ride[]>([]);
+  const [filteredRides, setFilteredRides] = useState<Ride[]>([]); // State to store filtered rides
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -25,6 +27,7 @@ const AllRidesPage: React.FC = () => {
         }
         const data = await response.json();
         setRides(data); // Assuming the response is an array of rides
+        setFilteredRides(data); // Initially, all rides are displayed
       } catch (err) {
         setError("Error fetching rides. Please try again later.");
       } finally {
@@ -46,12 +49,25 @@ const AllRidesPage: React.FC = () => {
 
   const clerkID = userId; // This is the Clerk User ID (clerkID)
 
+  // Filter rides based on search term
+  const handleSearch = (searchTerm: string) => {
+    if (searchTerm === "") {
+      setFilteredRides(rides); 
+    } else {
+      const filtered = rides.filter((ride) =>
+        ride.origin.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        ride.destination.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredRides(filtered);
+    }
+  };
+
   const handleAddToRide = async (rideId: string) => {
     try {
       // Find the ride with the given ID
       const rideToUpdate = rides.find((ride) => ride.rideId === rideId);
       if (!rideToUpdate) {
-        console.error(`Ride with ID ${rideId} not found`); // Log if ride not found
+        console.error(`Ride with ID ${rideId} not found`);
         return;
       }
 
@@ -73,19 +89,16 @@ const AllRidesPage: React.FC = () => {
         throw new Error("Failed to add to ride");
       }
 
-      console.log("Successfully added user to ride"); // Log success
-      alert("You are added to ride successfully");
-      router.push("/passenger/dashboard");
-      // Optionally, you could redirect the user or update the UI
+      console.log("Successfully added user to ride");
       setRides((prevRides) =>
         prevRides.map((ride) =>
-          ride.rideId === rideId
-            ? { ...ride, passengers: updatedRide.passengers }
-            : ride
+          ride.rideId === rideId ? { ...ride, passengers: updatedRide.passengers } : ride
         )
       );
+      alert("You are added to ride successfully");
+      router.push("/passenger/dashboard");
     } catch (err) {
-      console.error("Error adding user to ride:", err); // Log error if PATCH request fails
+      console.error("Error adding user to ride:", err);
     }
   };
 
@@ -94,29 +107,27 @@ const AllRidesPage: React.FC = () => {
       <h1 className="text-3xl font-bold text-yellow-500 mb-6 text-center">
         Available Rides
       </h1>
-      <ul className="space-y-6">
-        {rides.map((ride) => {
-          const {
-            destinationLocation,
-            origin,
-            destination,
-            startTime,
-            rideId,
-            passengers,
-          } = ride;
+
+      <div className="flex justify-center w-full mb-8">
+        <div className="w-full max-w-md">
+          <SearchBar onSearch={handleSearch} />
+        </div>
+      </div>
+      
+
+      <ul className="space-y-6 mt-8">
+        {filteredRides.map((ride) => {
+          const { destinationLocation, origin, destination, startTime, rideId, passengers } = ride;
 
           // Ensure the destinationLocation and coordinates are valid
           if (!destinationLocation || !destinationLocation.coordinates) {
-            console.warn(`Invalid destination data for ride ${rideId}`); // Log invalid ride data
+            console.warn(`Invalid destination data for ride ${rideId}`);
             return <p key={rideId}>Error: Invalid ride data</p>;
           }
 
           // Check if the current user is in the passengers list and the passenger count is less than 3
           const isValidForAdd =
-            passengers.length < 3 &&
-            !passengers.some((passenger) => passenger.clerkId === clerkID);
-
-          console.log(`Ride ${rideId} - Valid for adding:`, isValidForAdd); // Log the add condition
+            passengers.length < 3 && !passengers.some((passenger) => passenger.clerkId === clerkID);
 
           if (!isValidForAdd) {
             return null; // Skip this ride if it doesn't meet the condition

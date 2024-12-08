@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Ride } from "../components/Types/RideType";
+import { Ride } from "./Types/RideType";
 
 // API key for GeoAPI
 const apiKey = "5312629079c24b608f9ca2bcaa5fce0b";
@@ -72,6 +72,10 @@ const RideCard: React.FC<RideCardProps> = ({
             <strong className="text-gray-400">Start Time:</strong>{" "}
             {new Date(ride.startTime).toLocaleString()}
           </p>
+          <p className="mt-1 text-white text-base md:text-lg">
+  <strong className="text-gray-400">Passengers:</strong>{" "}
+  {ride.passengers ? ride.passengers.length : 0}
+</p>
         </div>
         {addToRide ? (
           <button
