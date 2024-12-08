@@ -2,17 +2,16 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
-import {Ride} from "../components/Types/RideType"
+import { Ride } from "../components/Types/RideType";
 
 // API key for GeoAPI
 const apiKey = "5312629079c24b608f9ca2bcaa5fce0b"; 
 
 interface RideCardProps {
   ride: Ride;
-  handleDeleteRide: (rideId: string, passengers: string[]) => void;
 }
 
-const RideCard: React.FC<RideCardProps> = ({ ride, handleDeleteRide }) => {
+const RideCard: React.FC<RideCardProps> = ({ ride }) => {
   const router = useRouter(); // Initialize router
 
   const { destinationLocation } = ride;
@@ -52,7 +51,6 @@ const RideCard: React.FC<RideCardProps> = ({ ride, handleDeleteRide }) => {
         <p>
           <strong>Start Time:</strong> {new Date(ride.startTime).toLocaleString()}
         </p>
-        
 
         <div className="flex space-x-4 mt-4">
           {/* Update ride button */}
@@ -62,16 +60,6 @@ const RideCard: React.FC<RideCardProps> = ({ ride, handleDeleteRide }) => {
           >
             Update
           </button>
-
-          {/* Delete or remove passenger */}
-          <button
-                  onClick={() =>
-                    handleDeleteRide(ride.rideId, ride.passengers.map(passenger => passenger.clerkId)) // Extract clerkId
-                  }
-                  className="bg-red-500 p-2 rounded-md"
-                >
-                  {ride.passengers.length === 0 ? "Delete Ride" : "Remove from Ride"}
-                </button>
         </div>
       </div>
     </li>

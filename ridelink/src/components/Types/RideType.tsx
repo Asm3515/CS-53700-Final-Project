@@ -1,6 +1,7 @@
 // types.ts or interfaces.ts
 export interface Ride {
     rideId: string;
+    rider: string;
     origin: string;
     destination: string;
     startTime: string;
