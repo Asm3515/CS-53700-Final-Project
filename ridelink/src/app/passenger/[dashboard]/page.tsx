@@ -60,36 +60,47 @@ const PassengerDashboard = () => {
 
   return (
     <div className="p-6 bg-black text-white min-h-screen flex flex-col gap-8">
-      <h2 className="text-2xl md:text-3xl font-bold text-center">Passenger Dashboard</h2>
-      {/* {error && (
-        <div className="bg-red-500 text-white p-4 rounded-md shadow">
-          <p className="text-lg">{error}</p>
-        </div>
-      )} */}
-      <div className="flex flex-col md:flex-row gap-4 justify-center">
-        <button
-          onClick={handleFindRides}
-          className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-6 py-3 rounded-md shadow transition duration-300"
-        >
-          Find Rides
-        </button>
-        <button
-          onClick={handleRequestRide}
-          className="bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-3 rounded-md shadow transition duration-300"
-        >
-          Request Ride
-        </button>
-      </div>
+      <h2 className="text-2xl md:text-3xl font-bold text-center">
+        Passenger Dashboard
+      </h2>
       {rides.length === 0 ? (
         <div className="text-center text-lg mt-8">
-          <p>No rides found for this passenger.</p>
+          <p>
+            Didn't book a ride with{" "}
+            <span className="text-yellow-500 font-bold">RideLink</span> yet? You
+            can do it now!
+          </p>
+          <div className="flex flex-col md:flex-row gap-4 justify-center my-8">
+            {["Find Rides", "Request Ride"].map((label, index) => (
+              <button
+                key={label}
+                onClick={index === 0 ? handleFindRides : handleRequestRide}
+                className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold px-6 py-3 rounded-md shadow-lg transition-transform transform hover:scale-105"
+              >
+                {label}
+              </button>
+            ))}
+          </div>
         </div>
       ) : (
-        <ul className="space-y-6">
-          {rides.map((ride) => (
-            <RideCard key={ride.rideId} ride={ride} />
-          ))}
-        </ul>
+        <>
+          <div className="flex flex-col md:flex-row gap-4 justify-center my-8">
+            {["Find Rides", "Request Ride"].map((label, index) => (
+              <button
+                key={label}
+                onClick={index === 0 ? handleFindRides : handleRequestRide}
+                className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold px-6 py-3 rounded-md shadow-lg transition-transform transform hover:scale-105"
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+          <ul className="space-y-6">
+            {rides.map((ride) => (
+              <RideCard key={ride.rideId} ride={ride} />
+            ))}
+          </ul>
+        </>
       )}
     </div>
   );
