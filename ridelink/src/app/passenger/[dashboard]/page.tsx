@@ -85,7 +85,7 @@ const PassengerDashboard = () => {
           <p>No rides found for this passenger.</p>
         </div>
       ) : (
-        <ul className="space-y-6">
+        <ul className="space-y-4 mt-4 rounded-lg">
           {rides.map((ride) => (
             <RideCard key={ride.rideId} ride={ride} />
           ))}
