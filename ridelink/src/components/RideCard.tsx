@@ -1,7 +1,6 @@
-"use client"
+"use client";
 
 import React from "react";
-import { useRouter } from "next/navigation";
 import { Ride } from "../components/Types/RideType";
 
 // API key for GeoAPI
@@ -12,9 +11,8 @@ interface RideCardProps {
 }
 
 const RideCard: React.FC<RideCardProps> = ({ ride }) => {
-  const router = useRouter(); // Initialize router
-
   const { destinationLocation } = ride;
+
   if (!destinationLocation || !destinationLocation.coordinates) {
     return <p>Error: Invalid ride data</p>;
   }
@@ -23,11 +21,6 @@ const RideCard: React.FC<RideCardProps> = ({ ride }) => {
 
   // Construct GeoAPI URL dynamically
   const geoApiUrl = `https://maps.geoapify.com/v1/staticmap?style=osm-bright-smooth&width=600&height=400&center=lonlat:${destinationLongitude},${destinationLatitude}&zoom=14&apiKey=${apiKey}`;
-
-  // Function to navigate to the update ride page
-  const navigateToUpdateRide = (rideId: string) => {
-    router.push(`/ride/updateride/${rideId}`);
-  };
 
   return (
     <li className="p-4 border rounded-md bg-gray-800 shadow-sm flex">
@@ -51,16 +44,6 @@ const RideCard: React.FC<RideCardProps> = ({ ride }) => {
         <p>
           <strong>Start Time:</strong> {new Date(ride.startTime).toLocaleString()}
         </p>
-
-        <div className="flex space-x-4 mt-4">
-          {/* Update ride button */}
-          <button
-            onClick={() => navigateToUpdateRide(ride.rideId)}
-            className="bg-blue-500 p-2 rounded-md"
-          >
-            Update
-          </button>
-        </div>
       </div>
     </li>
   );
