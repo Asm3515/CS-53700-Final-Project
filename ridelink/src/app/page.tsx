@@ -20,7 +20,7 @@ export default async function Home() {
             Ride when you need, connect with ease.
           </p>
           {userId ? (
-            <Link href="/findRide">
+            <Link href="/passenger/dashboard">
               <button className="mt-6 bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-4 rounded shadow transition">
                 Get Started
               </button>
