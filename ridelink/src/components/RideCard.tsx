@@ -8,10 +8,16 @@ const apiKey = "5312629079c24b608f9ca2bcaa5fce0b";
 
 interface RideCardProps {
   ride: Ride;
+  handleAddToRide?: (rideId: string) => void;
+  addToRide?: Boolean;
 }
 
-const RideCard: React.FC<RideCardProps> = ({ ride }) => {
-  const { startLocation, destinationLocation } = ride;
+const RideCard: React.FC<RideCardProps> = ({
+  ride,
+  handleAddToRide,
+  addToRide,
+}) => {
+  const { startLocation, destinationLocation, rideId } = ride;
 
   if (
     !startLocation ||
@@ -67,6 +73,16 @@ const RideCard: React.FC<RideCardProps> = ({ ride }) => {
             {new Date(ride.startTime).toLocaleString()}
           </p>
         </div>
+        {addToRide ? (
+          <button
+            onClick={() => handleAddToRide(rideId)}
+            className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105 mt-4"
+          >
+            Add me to Ride
+          </button>
+        ) : (
+          <></>
+        )}
       </div>
     </li>
   );
