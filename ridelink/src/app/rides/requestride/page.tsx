@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import dynamic from "next/dynamic";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@clerk/nextjs";
+
 
 // Dynamically import AddressAutofill with correct types
 
@@ -21,6 +23,7 @@ export default function FindRidePage() {
   const [pickupCoordinates, setPickupCoordinates] = useState<[number, number]>();
   const [dropoffCoordinates, setDropoffCoordinates] = useState<[number, number]>();
   const [dateTime, setDateTime] = useState("");
+  const { userId } = useAuth(); 
   const router = useRouter();
 
   const handleGeocode = async (location: string) => {
@@ -49,7 +52,7 @@ export default function FindRidePage() {
         createdBy: "passenger",
         passengers: [
           {
-            clerkId: "user_2pgpECsPw29YylvQQ95A97h5MK9", // Example user
+            clerkId: userId, // Example user
             pickupLocation: pickupData.placeName,
             dropoffLocation: dropoffData.placeName,
             pickupCoordinates: pickupData.coordinates,
