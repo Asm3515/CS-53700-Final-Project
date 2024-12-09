@@ -11,11 +11,7 @@ describe("Dashboard Features", () => {
 
   it("should redirect to Passenger Dashboard on button click", () => {
     cy.visit("https://ridelink-public.vercel.app/");
-
-    // Click the "Get Started" button
     cy.get("button").contains("Get Started").click();
-
-    // Verify redirection to the Passenger Dashboard
     cy.url().should("not.include", "/dashboard");
   });
 });
