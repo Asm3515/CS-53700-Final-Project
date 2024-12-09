@@ -3,6 +3,14 @@ describe("UI Tests", () => {
     cy.visit("https://ridelink-public.vercel.app/");
     cy.get("nav").should("be.visible");
     cy.get('img[alt="RideLink logo').should("exist");
+    cy.get("nav")
+      .contains("Ride")
+      .should("be.visible")
+      .and("have.attr", "href", "/passenger/dashboard");
+    cy.get("nav")
+      .contains("Drive")
+      .should("be.visible")
+      .and("have.attr", "href", "/drivers/dashboard");
   });
 
   it("should display Footer correctly", () => {
