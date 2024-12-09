@@ -10,12 +10,14 @@ interface RideCardProps {
   ride: Ride;
   handleAddToRide?: (rideId: string) => void;
   addToRide?: Boolean;
+  onUpdateRide?: (rideId: string) => void;
 }
 
 const RideCard: React.FC<RideCardProps> = ({
   ride,
   handleAddToRide,
   addToRide,
+  onUpdateRide,
 }) => {
   const { startLocation, destinationLocation, rideId } = ride;
 
@@ -73,20 +75,30 @@ const RideCard: React.FC<RideCardProps> = ({
             {new Date(ride.startTime).toLocaleString()}
           </p>
           <p className="mt-1 text-white text-base md:text-lg">
-  <strong className="text-gray-400">Passengers:</strong>{" "}
-  {ride.passengers ? ride.passengers.length : 0}
-</p>
+            <strong className="text-gray-400">Passengers:</strong>{" "}
+            {ride.passengers ? ride.passengers.length : 0} 
+          </p>
         </div>
-        {addToRide ? (
-          <button
-            onClick={() => handleAddToRide(rideId)}
-            className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105 mt-4"
-          >
-            Add me to Ride
-          </button>
-        ) : (
-          <></>
-        )}
+        
+        <div className="flex space-x-4 mt-4">
+          {addToRide && (
+            <button
+              onClick={() => handleAddToRide(rideId)}
+              className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105 flex-1"
+            >
+              Add me to Ride
+            </button>
+          )}
+          
+          {onUpdateRide && (
+            <button
+              onClick={() => onUpdateRide(rideId)}
+              className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105 flex-1"
+            >
+              Update Ride
+            </button>
+          )}
+        </div>
       </div>
     </li>
   );
