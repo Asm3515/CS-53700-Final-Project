@@ -19,6 +19,14 @@ describe("UI Tests", () => {
     cy.get("p")
       .contains(`© ${new Date().getFullYear()} RideLink. All rights reserved.`)
       .should("exist");
+    cy.get("footer")
+      .contains("Book a Ride")
+      .should("be.visible")
+      .and("have.attr", "href", "/passenger/dashboard");
+    cy.get("footer")
+      .contains("Give a Ride")
+      .should("be.visible")
+      .and("have.attr", "href", "/drivers/dashboard");
   });
 
   it("should display the Google Maps iframe correctly", () => {
