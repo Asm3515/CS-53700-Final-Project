@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import RideCard from "@/components/RideCard";
+import RideCard from "@/components/RideCard_Rider";
 import { Ride } from "@/components/Types/RideType";
 
 const PassengerDashboard = () => {
