@@ -20,15 +20,11 @@ const UpdateRidePage = () => {
   const [origin, setOrigin] = useState<string>("");
   const [destination, setDestination] = useState<string>("");
   const [startTime, setStartTime] = useState<string>("");
-  const [availableSeats, setAvailableSeats] = useState<number>(0);
 
   // State for form handling
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-
-  // State for updating passenger fares
-  const [passengerFares, setPassengerFares] = useState<{ [key: string]: number }>({});
 
   // Fetch ride details when component mounts
   useEffect(() => {
@@ -58,14 +54,6 @@ const UpdateRidePage = () => {
         setOrigin(rideData.origin);
         setDestination(rideData.destination);
         setStartTime(new Date(rideData.startTime).toISOString().slice(0, 16)); // Format for datetime-local input
-        setAvailableSeats(rideData.availableSeats || 0);
-        
-        // Initialize passenger fares
-        const fares: { [key: string]: number } = {};
-        rideData.passengers.forEach((passenger: any) => {
-          fares[passenger.id] = passenger.fare || 0;
-        });
-        setPassengerFares(fares);
 
       } catch (err) {
         console.error("Error fetching ride details:", err);
@@ -83,34 +71,32 @@ const UpdateRidePage = () => {
   // Handle form submission
   const handleUpdateRide = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     try {
       setLoading(true);
-
-      // Prepare the data to send in the update request
-      const updatedRideData = {
-        origin,
-        destination,
-        startTime: new Date(startTime).toISOString(),
-        availableSeats,
-        riderId: userId,
-        passengers: Object.keys(passengerFares).map((passengerId) => ({
-          id: passengerId,
-          fare: passengerFares[passengerId],
-        })),
-      };
-
+  
+      // Start with the current ride data
+      const updatedRideData = { ...ride };  // Copy the existing ride data
+  
+      // Update only the fields that have changed
+      if (origin !== ride?.origin) updatedRideData.origin = origin;
+      if (destination !== ride?.destination) updatedRideData.destination = destination;
+      if (startTime !== new Date(ride?.startTime).toISOString().slice(0, 16)) {
+        updatedRideData.startTime = new Date(startTime).toISOString();
+      }
+  
       // Log the request before making it
-      console.log("API Request: Update Ride", `/api/rides/${rideId}`, updatedRideData);
-
-      const response = await axios.put(`/api/rides/${rideId}`, updatedRideData);
-      
+      console.log("API Request: Update Ride", `/api/rides?rideId=${rideId}`, updatedRideData);
+  
+      // Send the entire updated data with manipulated fields
+      const response = await axios.patch(`/api/rides?rideId=${rideId}`, updatedRideData);
+  
       // Log the response after receiving it
       console.log("API Response: Update Ride", response.data);
-
+  
       setSuccessMessage("Ride updated successfully!");
-
-      // Optional: Redirect after successful update
+  
+      // Redirect after successful update
       setTimeout(() => {
         router.push("/drivers/dashboard");
       }, 2000);
@@ -125,28 +111,37 @@ const UpdateRidePage = () => {
   // Handle cancellation
   const handleCancelRide = async () => {
     try {
+      setLoading(true);
+      setError(null);
+  
       // Log the request before making it
-      console.log("API Request: Cancel Ride", `/api/rides/${rideId}`);
-
-      const response = await axios.delete(`/api/rides/${rideId}`);
-      
+      console.log("API Request: Cancel Ride", `/api/removerider?rideId=${rideId}`, { cancelRide: true });
+  
+      // Send the PATCH request with cancelRide payload
+      const response = await axios.patch(
+        `/api/removerider?rideId=${rideId}`, 
+        { cancelRide: true }
+      );
+  
       // Log the response after receiving it
       console.log("API Response: Cancel Ride", response.data);
-
-      // Redirect to dashboard after cancellation
-      router.push("/drivers/dashboard");
+  
+      setSuccessMessage("Rider has been removed successfully!");
+  
+      // Redirect to the dashboard after a brief delay
+      setTimeout(() => {
+        router.push("/drivers/dashboard");
+      }, 2000);
     } catch (err) {
-      console.error("Error cancelling ride:", err);
+      console.error("Error canceling ride:", err);
       setError("Failed to cancel ride. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Handle fare update for a passenger
-  const handleFareChange = (passengerId: string, newFare: number) => {
-    setPassengerFares((prevFares) => ({
-      ...prevFares,
-      [passengerId]: newFare,
-    }));
+  const handleBackToDashboard = () => {
+    router.push("/drivers/dashboard");
   };
 
   // Loading state
@@ -227,41 +222,7 @@ const UpdateRidePage = () => {
             className="w-full p-2 bg-gray-800 text-white rounded"
           />
         </div>
-        
-        <div className="mb-4">
-          <label htmlFor="availableSeats" className="block text-gray-400 mb-2">
-            Available Seats
-          </label>
-          <input
-            type="number"
-            id="availableSeats"
-            value={availableSeats}
-            onChange={(e) => setAvailableSeats(Number(e.target.value))}
-            min="0"
-            max="10"
-            required
-            className="w-full p-2 bg-gray-800 text-white rounded"
-          />
-        </div>
 
-        {/* Passenger fare update section */}
-        {ride?.passengers?.map((passenger: any) => (
-          <div key={passenger.id} className="mb-4">
-            <label className="block text-gray-400 mb-2">
-              {`Fare for ${passenger.name}`}
-            </label>
-            <input
-              type="number"
-              value={passengerFares[passenger.id] || 0}
-              onChange={(e) =>
-                handleFareChange(passenger.id, Number(e.target.value))
-              }
-              min="0"
-              className="w-full p-2 bg-gray-800 text-white rounded"
-            />
-          </div>
-        ))}
-        
         <div className="flex space-x-4">
           <button
             type="submit"

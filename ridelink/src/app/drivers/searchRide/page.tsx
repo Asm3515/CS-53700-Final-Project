@@ -94,10 +94,20 @@ const AllRidesPage: React.FC = () => {
       console.error("Error adding user to ride:", err); // Log error if PATCH request fails
     }
   };
+  const handleBackToDashboard = () => {
+    router.push("/drivers/dashboard");
+  };
+
 
   return (
     <div className="p-4">
       <h1 className="text-xl font-bold mb-4">All Rides</h1>
+      <button
+        onClick={handleBackToDashboard}
+        className="bg-blue-500 p-2 rounded-md mb-4"
+      >
+        Back to Dashboard
+      </button>
       <ul className="space-y-4">
         {rides.map((ride) => {
           const { destinationLocation, origin, destination, startTime, rideId, rider } = ride;
@@ -117,6 +127,7 @@ const AllRidesPage: React.FC = () => {
           const geoApiUrl = `https://maps.geoapify.com/v1/staticmap?style=osm-bright-smooth&width=600&height=400&center=lonlat:${destinationLongitude},${destinationLatitude}&zoom=14&apiKey=5312629079c24b608f9ca2bcaa5fce0b`;
 
           return (
+            
             <li key={rideId} className="p-4 border rounded-md bg-gray-800 shadow-sm flex">
               {/* Map on the left side */}
               <div className="w-1/2 pr-4">
