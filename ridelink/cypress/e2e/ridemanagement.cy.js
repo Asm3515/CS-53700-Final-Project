@@ -22,16 +22,6 @@ describe("Ride Management", () => {
           _id: "ride1",
           __v: 0,
         },
-        // {
-        //   rideId: "2",
-        //   origin: "Indianapolis, Indiana, United States",
-        //   destination: "Detroit, Michigan, United States",
-        //   passengers: [],
-        //   startTime: "2023-12-13T10:00:00Z",
-        //   destinationLocation: {
-        //     coordinates: [-83.0458, 42.3314], // Detroit coordinates
-        //   },
-        // },
       ],
     }).as("getRides");
 
@@ -42,12 +32,6 @@ describe("Ride Management", () => {
     cy.get('input[placeholder="Search..."]').type("Fort Wayne");
     cy.contains("Fort Wayne, Indiana, United States").should("be.visible");
     cy.contains("Chicago, Illinois, United States").should("be.visible");
-
-    // Filter the rides and ensure the filtered ride is displayed
-    // cy.get('input[placeholder="Search..."]').clear().type("Indianapolis");
-    // cy.contains("Indianapolis, Indiana, United States").should("be.visible");
-    // cy.contains("Detroit, Michigan, United States").should("be.visible");
-    // cy.contains("Fort Wayne, Indiana, United States").should("not.exist");
   });
 
   it("should allow adding a user to a ride", () => {
@@ -129,12 +113,18 @@ describe("Ride Management", () => {
     cy.visit("https://ridelink-public.vercel.app/rides/requestride");
 
     cy.get('input[placeholder="Enter pick-up location"]').type("Fort Wayne");
-    cy.wait("@geocode");
-    cy.contains("Fort Wayne, Indiana, United States").click();
+    cy.wait("@geocode", { timeout: 5000 });
+    cy.get('input[placeholder="Enter pick-up location"]')
+      .parent()
+      .contains("Fort Wayne, Indiana, United States")
+      .click();
 
     cy.get('input[placeholder="Enter drop-off location"]').type("Chicago");
-    cy.wait("@geocode");
-    cy.contains("Chicago, Illinois, United States").click();
+    cy.wait("@geocode", { timeout: 5000 });
+    cy.get('input[placeholder="Enter drop-off location"]')
+      .parent()
+      .contains("Chicago, Illinois, United States")
+      .click();
 
     const futureDate = new Date();
     futureDate.setDate(futureDate.getDate() + 1);
