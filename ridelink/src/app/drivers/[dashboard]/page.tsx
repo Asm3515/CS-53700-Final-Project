@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import RideCard from "@/components/RideCard";
+import RideCard from "@/components/RideCard_Driver";
 import { Ride } from "@/components/Types/RideType";
 
 const DriverDashboard = () => {
@@ -77,6 +77,11 @@ const DriverDashboard = () => {
     router.push("/drivers/searchRide");
   };
 
+  const handleUpdateRide = (rideId: string) => {
+    console.log("Redirecting to update ride:", rideId);
+    router.push(`/drivers/updateride/${rideId}`);
+  };
+
   if (loading) {
     return (
       <div className="p-6 bg-black text-white">
@@ -103,7 +108,11 @@ const DriverDashboard = () => {
       ) : (
         <ul className="space-y-4">
           {rides.map((ride) => (
-            <RideCard key={ride.rideId} ride={ride} />
+            <RideCard 
+              key={ride.rideId} 
+              ride={ride} 
+              onUpdateRide={handleUpdateRide}
+            />
           ))}
         </ul>
       )}

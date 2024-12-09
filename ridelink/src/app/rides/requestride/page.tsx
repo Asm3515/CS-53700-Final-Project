@@ -132,10 +132,20 @@ export default function FindRidePage() {
     }
   };
 
+  const handleBackToDashboard = () => {
+    router.push("/passenger/dashboard");
+  };
+
   return (
     <div className="flex flex-col min-h-screen p-8 bg-black text-white gap-6">
       <div className="w-full max-w-lg mx-auto bg-gray-800 text-white rounded-lg shadow-lg p-6">
         <h2 className="text-2xl font-bold mb-6">Find a Ride</h2>
+        <button
+        onClick={handleBackToDashboard}
+        className="bg-blue-500 p-2 rounded-md mb-4"
+      >
+        Return to Dashboard
+      </button>
         
         <div className="mb-6">
           <label className="block text-gray-300 mb-2">Pick-up Location</label>
