@@ -1411,7 +1411,7 @@ const UpdateRidePage = () => {
   
       // Redirect to the driver's dashboard after a short delay
       setTimeout(() => {
-        router.push("/drivers/dashboard");
+        router.push("/passenger/dashboard");
       }, 2000);
     } catch (err) {
       console.error("Error removing passenger from ride:", err);
