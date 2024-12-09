@@ -77,7 +77,7 @@ const RegisterRider = () => {
       console.log("Response:", response); // Log the response from the API
     
       if (response.status === 201) {
-        router.push("/dashboard"); // Redirect to dashboard upon success
+        router.push("/drivers/dashboard"); // Redirect to dashboard upon success
       } else {
         setError("Failed to register. Please try again.");
       }
