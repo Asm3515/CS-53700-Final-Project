@@ -102,12 +102,21 @@ const AllRidesPage: React.FC = () => {
     }
   };
 
+  const handleBackToDashboard = () => {
+    router.push("/passenger/dashboard");
+  };
+
   return (
     <div className="p-6 bg-black min-h-screen text-white">
       <h1 className="text-3xl font-bold text-yellow-500 mb-6 text-center">
         Available Rides
       </h1>
-
+      <button
+        onClick={handleBackToDashboard}
+        className="bg-blue-500 p-2 rounded-md mb-4"
+      >
+        Return to Dashboard
+      </button>
       <div className="flex justify-center w-full mb-8">
         <div className="w-full max-w-md">
           <SearchBar onSearch={handleSearch} />
