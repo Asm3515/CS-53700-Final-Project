@@ -87,7 +87,7 @@ const RideCard: React.FC<RideCardProps> = ({
         {/* Update Ride Button */}
         <a
           href={`/rides/updateride/${rideId}`}
-          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105 mt-4"
+          className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105 mt-4"
         >
           Update Ride
         </a>

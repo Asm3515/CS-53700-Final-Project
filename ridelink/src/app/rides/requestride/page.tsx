@@ -15,15 +15,14 @@ export default function FindRidePage() {
   const [selectedDropoffLocation, setSelectedDropoffLocation] = useState(null);
 
   const [dateTime, setDateTime] = useState("");
-  
- 
+
   const today = new Date();
   const todayDate = today.toISOString().split("T")[0];
   // const hours = today.getHours().toString().padStart(2, "0");
   // const minutes = today.getMinutes().toString().padStart(2, "0");
   // const todayWithTime = `${todayDate}T${hours}:${minutes}`;
-   const todayWithTime = todayDate + "T00:00"; 
-  
+  const todayWithTime = todayDate + "T00:00";
+
   const { userId } = useAuth();
   const router = useRouter();
 
@@ -37,9 +36,14 @@ export default function FindRidePage() {
       );
 
       // Filtering loccations with usa as country
-      const filteredUSASuggestions = response.data.features.filter((feature) => {
-        return feature.context.some((context) => context.id.includes("country") && context.text === "United States");
-      });
+      const filteredUSASuggestions = response.data.features.filter(
+        (feature) => {
+          return feature.context.some(
+            (context) =>
+              context.id.includes("country") && context.text === "United States"
+          );
+        }
+      );
 
       return filteredUSASuggestions.map((feature) => ({
         coordinates: feature.center,
@@ -93,7 +97,9 @@ export default function FindRidePage() {
     try {
       // Validate that locations are selected
       if (!selectedPickupLocation || !selectedDropoffLocation || !dateTime) {
-        alert("Please select pickup and dropoff locations and choose a date and time.");
+        alert(
+          "Please select pickup and dropoff locations and choose a date and time."
+        );
         return;
       }
 
@@ -137,16 +143,15 @@ export default function FindRidePage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen p-8 bg-black text-white gap-6">
-      <div className="w-full max-w-lg mx-auto bg-gray-800 text-white rounded-lg shadow-lg p-6">
-        <h2 className="text-2xl font-bold mb-6">Find a Ride</h2>
-        <button
+    <div className="flex flex-col min-h-screen p-8 bg-black text-white gap-10">
+      <button
         onClick={handleBackToDashboard}
-        className="bg-blue-500 p-2 rounded-md mb-4"
+        className="text-yellow-500 hover:text-yellow-600 hover:border px-6 py-3 rounded-md shadow-lg transition-transform transform hover:scale-105 w-1/4"
       >
         Return to Dashboard
       </button>
-        
+      <div className="w-full max-w-lg mx-auto bg-gray-800 text-white rounded-lg shadow-lg p-6">
+        <h2 className="text-2xl font-bold mb-6 text-center">Find a Ride</h2>
         <div className="mb-6">
           <label className="block text-gray-300 mb-2">Pick-up Location</label>
           <input
@@ -170,7 +175,7 @@ export default function FindRidePage() {
             </div>
           )}
         </div>
-        
+
         <div className="mb-6">
           <label className="block text-gray-300 mb-2">Drop-off Location</label>
           <input
@@ -194,18 +199,18 @@ export default function FindRidePage() {
             </div>
           )}
         </div>
-        
+
         <div className="mb-6">
           <label className="block text-gray-300 mb-2">Date and Time</label>
           <input
             type="datetime-local"
             value={dateTime}
             onChange={(e) => setDateTime(e.target.value)}
-            min={todayWithTime} 
+            min={todayWithTime}
             className="w-full p-3 rounded-md border border-gray-600 bg-gray-900 text-white focus:outline-none focus:ring-2 focus:ring-yellow-500"
           />
         </div>
-        
+
         <button
           onClick={handleSubmit}
           className="w-full py-3 bg-yellow-500 text-black font-bold rounded-md shadow-md hover:bg-yellow-600 transition duration-300"
