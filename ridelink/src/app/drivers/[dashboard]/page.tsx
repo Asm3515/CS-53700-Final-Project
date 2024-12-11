@@ -61,11 +61,7 @@ const DriverDashboard = () => {
     router.push("/drivers/searchRide");
   };
 
-  const handleUpdateRide = (rideId: string, rideStatus: string) => {
-    if (rideStatus === "completed") {
-      alert("This ride has been completed and cannot be updated or deleted.");
-      return;
-    }
+  const handleUpdateRide = (rideId: string) => {
     router.push(`/drivers/updateride/${rideId}`);
   };
 
@@ -78,13 +74,13 @@ const DriverDashboard = () => {
   }
 
   return (
-    <div className="p-6 bg-black text-white min-h-screen flex flex-col items-center">
+    <div className="p-6 bg-black text-white min-h-screen flex flex-col gap-8">
       <h1 className="text-3xl font-bold text-yellow-500 mb-6 text-center">
         Driver Dashboard
       </h1>
       <button
         onClick={handleCreateRide}
-        className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105 mb-8"
+        className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105 mb-8 w-fit self-center"
       >
         Search Rides to Offer
       </button>
@@ -93,7 +89,7 @@ const DriverDashboard = () => {
           <p>{error}</p>
         </div>
       )}
-
+      <h2 className="text-xl md:text-3xl font-bold text-center">Your Rides</h2>
       {rides.length === 0 ? (
         <div className="bg-gray-800 text-center text-white p-6 rounded-lg shadow-md">
           <p>No rides found for this Driver.</p>
@@ -104,7 +100,7 @@ const DriverDashboard = () => {
             <RideCard
               key={ride.rideId}
               ride={ride}
-              onUpdateRide={() => handleUpdateRide(ride.rideId, ride.status)}
+              onUpdateRide={handleUpdateRide}
             />
           ))}
         </ul>
