@@ -19,7 +19,7 @@ const RideCard: React.FC<RideCardProps> = ({
   addToRide,
   onUpdateRide,
 }) => {
-  const { startLocation, destinationLocation, rideId } = ride;
+  const { startLocation, destinationLocation, rideId, status } = ride;
 
   if (
     !startLocation ||
@@ -76,10 +76,24 @@ const RideCard: React.FC<RideCardProps> = ({
           </p>
           <p className="mt-1 text-white text-base md:text-lg">
             <strong className="text-gray-400">Passengers:</strong>{" "}
-            {ride.passengers ? ride.passengers.length : 0} 
+            {ride.passengers ? ride.passengers.length : 0}
+          </p>
+          <p className="mt-1 text-white text-base md:text-lg">
+            <strong className="text-gray-400">Status:</strong>{" "}
+            <span
+              className={`px-2 py-1 rounded text-sm font-bold ${
+                status === "pending"
+                  ? "bg-yellow-500 text-black"
+                  : status === "active"
+                  ? "bg-blue-500 text-white"
+                  : "bg-green-500 text-white"
+              }`}
+            >
+              {status.charAt(0).toUpperCase() + status.slice(1)}
+            </span>
           </p>
         </div>
-        
+
         <div className="flex space-x-4 mt-4">
           {addToRide && (
             <button
@@ -89,11 +103,11 @@ const RideCard: React.FC<RideCardProps> = ({
               Add me to Ride
             </button>
           )}
-          
+
           {onUpdateRide && (
             <button
               onClick={() => onUpdateRide(rideId)}
-              className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105 flex-1"
+              className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105 flex-1"
             >
               Update Ride
             </button>

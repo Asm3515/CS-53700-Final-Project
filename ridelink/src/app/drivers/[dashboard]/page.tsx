@@ -14,19 +14,15 @@ const DriverDashboard = () => {
   const router = useRouter();
 
   useEffect(() => {
-    console.log("User ID:", userId);
     if (!userId) {
-      console.log("No user ID, redirecting to sign-in.");
       router.push("/sign-in");
       return;
     }
 
     checkRiderExists(userId).then((exists) => {
       if (!exists) {
-        console.log("Rider does not exist, redirecting to register.");
         router.push("/drivers/register");
       } else {
-        console.log("Rider exists, fetching rides.");
         fetchRides();
       }
     });
@@ -34,14 +30,8 @@ const DriverDashboard = () => {
 
   const checkRiderExists = async (clerkId: string): Promise<boolean> => {
     try {
-      console.log("Checking if rider exists with clerkId:", clerkId);
-      const response = await axios.get(`/api/rider`, {
-        params: { clerkId },
-      });
-      console.log("Rider existence check response:", response.data);
-  
-      // Check if the response data is not null and contains valid rider information
-      return response.data && response.data.clerkId === clerkId; 
+      const response = await axios.get(`/api/rider`, { params: { clerkId } });
+      return response.data && response.data.clerkId === clerkId;
     } catch (error) {
       console.error("Error checking rider existence:", error);
       return false;
@@ -50,17 +40,12 @@ const DriverDashboard = () => {
 
   const fetchRides = async () => {
     try {
-      console.log("Fetching rides for riderId:", userId);
       setLoading(true);
       const response = await axios.get(`/api/rides?riderId=${userId}`);
-      console.log("Fetch rides response:", response.data);
-
       if (Array.isArray(response.data) && response.data.length === 0) {
-        console.log("No rides found for this driver.");
         setError("No rides found for this Driver.");
         setRides([]);
       } else {
-        console.log("Rides found:", response.data);
         setRides(response.data);
         setError(null);
       }
@@ -73,44 +58,48 @@ const DriverDashboard = () => {
   };
 
   const handleCreateRide = () => {
-    console.log("Redirecting to create ride.");
     router.push("/drivers/searchRide");
   };
 
   const handleUpdateRide = (rideId: string) => {
-    console.log("Redirecting to update ride:", rideId);
     router.push(`/drivers/updateride/${rideId}`);
   };
 
   if (loading) {
     return (
-      <div className="p-6 bg-black text-white">
-        <h2 className="text-xl font-bold mb-4">Driver Dashboard</h2>
-        <p>Loading rides...</p>
+      <div className="p-6 bg-black text-white min-h-screen flex items-center justify-center">
+        <h2 className="text-2xl font-bold">Loading rides...</h2>
       </div>
     );
   }
 
   return (
-    <div className="p-6 bg-black text-white">
-      <h2 className="text-xl font-bold mb-4">Driver Dashboard</h2>
-      {error && <p className="text-red-500 mb-4">{error}</p>}
-
+    <div className="p-6 bg-black text-white min-h-screen flex flex-col items-center">
+      <h1 className="text-3xl font-bold text-yellow-500 mb-6 text-center">
+        Driver Dashboard
+      </h1>
       <button
         onClick={handleCreateRide}
-        className="bg-blue-500 p-2 rounded-md mb-4"
+        className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105 mb-8"
       >
-        Search rides to offer
+        Search Rides to Offer
       </button>
+      {error && (
+        <div className="bg-red-800 text-white p-4 rounded-md mb-6 text-center">
+          <p>{error}</p>
+        </div>
+      )}
 
       {rides.length === 0 ? (
-        <p>No rides found for this Driver.</p>
+        <div className="bg-gray-800 text-center text-white p-6 rounded-lg shadow-md">
+          <p>No rides found for this Driver.</p>
+        </div>
       ) : (
-        <ul className="space-y-4">
+        <ul className="space-y-6">
           {rides.map((ride) => (
-            <RideCard 
-              key={ride.rideId} 
-              ride={ride} 
+            <RideCard
+              key={ride.rideId}
+              ride={ride}
               onUpdateRide={handleUpdateRide}
             />
           ))}

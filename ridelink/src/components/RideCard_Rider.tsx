@@ -17,7 +17,7 @@ const RideCard: React.FC<RideCardProps> = ({
   handleAddToRide,
   addToRide,
 }) => {
-  const { startLocation, destinationLocation, rideId } = ride;
+  const { startLocation, destinationLocation, rideId, status } = ride;
 
   if (
     !startLocation ||
@@ -72,22 +72,26 @@ const RideCard: React.FC<RideCardProps> = ({
             <strong className="text-gray-400">Start Time:</strong>{" "}
             {new Date(ride.startTime).toLocaleString()}
           </p>
+          <p className="mt-1 text-white text-base md:text-lg">
+            <strong className="text-gray-400">Status:</strong>{" "}
+            <span className="capitalize">{status}</span>
+          </p>
         </div>
-        {addToRide ? (
+
+        {/* Add to Ride Button */}
+        {addToRide && (
           <button
             onClick={() => handleAddToRide(rideId)}
             className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105 mt-4"
           >
             Add me to Ride
           </button>
-        ) : (
-          <></>
         )}
 
         {/* Update Ride Button */}
         <a
           href={`/rides/updateride/${rideId}`}
-          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105 mt-4"
+          className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105 mt-4"
         >
           Update Ride
         </a>

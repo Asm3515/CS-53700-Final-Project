@@ -26,8 +26,12 @@ const AllRidesPage: React.FC = () => {
           throw new Error("Failed to fetch rides");
         }
         const data = await response.json();
-        setRides(data); // Assuming the response is an array of rides
-        setFilteredRides(data); // Initially, all rides are displayed
+
+        // Filter rides with status "pending"
+        const pendingRides = data.filter((ride) => ride.status === "pending");
+
+        setRides(data); // All rides
+        setFilteredRides(pendingRides); // Only rides with status "pending"
       } catch (err) {
         setError("Error fetching rides. Please try again later.");
       } finally {
@@ -52,11 +56,12 @@ const AllRidesPage: React.FC = () => {
   // Filter rides based on search term
   const handleSearch = (searchTerm: string) => {
     if (searchTerm === "") {
-      setFilteredRides(rides); 
+      setFilteredRides(rides);
     } else {
-      const filtered = rides.filter((ride) =>
-        ride.origin.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        ride.destination.toLowerCase().includes(searchTerm.toLowerCase())
+      const filtered = rides.filter(
+        (ride) =>
+          ride.origin.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          ride.destination.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFilteredRides(filtered);
     }
@@ -92,7 +97,9 @@ const AllRidesPage: React.FC = () => {
       console.log("Successfully added user to ride");
       setRides((prevRides) =>
         prevRides.map((ride) =>
-          ride.rideId === rideId ? { ...ride, passengers: updatedRide.passengers } : ride
+          ride.rideId === rideId
+            ? { ...ride, passengers: updatedRide.passengers }
+            : ride
         )
       );
       alert("You are added to ride successfully");
@@ -108,25 +115,32 @@ const AllRidesPage: React.FC = () => {
 
   return (
     <div className="p-6 bg-black min-h-screen text-white">
-      <h1 className="text-3xl font-bold text-yellow-500 mb-6 text-center">
-        Available Rides
-      </h1>
       <button
         onClick={handleBackToDashboard}
-        className="bg-blue-500 p-2 rounded-md mb-4"
+        className="text-yellow-500 hover:text-yellow-600 hover:border place-self-center p-2 rounded-md mb-4"
       >
         Return to Dashboard
       </button>
+      <h1 className="text-3xl font-bold text-yellow-500 mb-6 text-center">
+        Available Rides
+      </h1>
+
       <div className="flex justify-center w-full mb-8">
         <div className="w-full max-w-md">
           <SearchBar onSearch={handleSearch} />
         </div>
       </div>
-      
 
       <ul className="space-y-6 mt-8">
         {filteredRides.map((ride) => {
-          const { destinationLocation, origin, destination, startTime, rideId, passengers } = ride;
+          const {
+            destinationLocation,
+            origin,
+            destination,
+            startTime,
+            rideId,
+            passengers,
+          } = ride;
 
           // Ensure the destinationLocation and coordinates are valid
           if (!destinationLocation || !destinationLocation.coordinates) {
@@ -136,7 +150,8 @@ const AllRidesPage: React.FC = () => {
 
           // Check if the current user is in the passengers list and the passenger count is less than 3
           const isValidForAdd =
-            passengers.length < 3 && !passengers.some((passenger) => passenger.clerkId === clerkID);
+            passengers.length < 3 &&
+            !passengers.some((passenger) => passenger.clerkId === clerkID);
 
           if (!isValidForAdd) {
             return null; // Skip this ride if it doesn't meet the condition
