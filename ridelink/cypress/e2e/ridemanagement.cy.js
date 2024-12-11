@@ -119,16 +119,16 @@ describe("Ride Management", () => {
 
     cy.visit("https://ridelink-public.vercel.app/rides/requestride");
 
-    cy.get('input[placeholder="Enter pick-up location"]').type("Fort Wayne");
+    cy.get('input[placeholder="Enter pickup location"]').type("Fort Wayne");
     cy.wait("@geocode", { timeout: 5000 });
-    cy.get('input[placeholder="Enter pick-up location"]')
+    cy.get('input[placeholder="Enter pickup location"]')
       .parent()
       .contains("Fort Wayne, Indiana, United States")
       .click();
 
-    cy.get('input[placeholder="Enter drop-off location"]').type("Chicago");
+    cy.get('input[placeholder="Enter dropoff location"]').type("Chicago");
     cy.wait("@geocode", { timeout: 5000 });
-    cy.get('input[placeholder="Enter drop-off location"]')
+    cy.get('input[placeholder="Enter dropoff location"]')
       .parent()
       .contains("Chicago, Illinois, United States")
       .click();
