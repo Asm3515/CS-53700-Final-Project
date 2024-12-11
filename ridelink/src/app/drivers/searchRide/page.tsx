@@ -113,14 +113,13 @@ const AllRidesPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-black text-white p-6">
-      <div className="text-center mb-8">
-        <button
-          onClick={handleBackToDashboard}
-          className="bg-yellow-500 hover:bg-yellow-600 text-black py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105"
-        >
-          Back to Dashboard
-        </button>
-      </div>
+      <button
+        onClick={handleBackToDashboard}
+        className="text-yellow-500 hover:text-yellow-600 hover:border py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105"
+      >
+        Back to Dashboard
+      </button>
+      <div className="text-center mb-8"></div>
 
       <h1 className="text-3xl font-bold text-yellow-500 text-center mb-6">
         All Rides

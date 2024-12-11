@@ -7,7 +7,7 @@ const Footer = () => {
       <div className="w-full mt-8 h-[1px] bg-yellow-500"></div>
 
       <div className="row-start-3 flex flex-col items-center p-6 sm:p-12 md:px-16 md:py-8 bg-black text-white md:flex-row md:justify-between">
-        <div className="flex flex-col items-center gap-2 mb-4 md:mb-0 md:items-start">
+        <div className="flex flex-row items-center gap-32 mb-4 md:mb-0 md:items-start">
           <a href="/passenger/dashboard" className="text-lg hover:underline">
             Book a Ride
           </a>
