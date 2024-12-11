@@ -3,16 +3,16 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Ride } from "../../../components/Types/RideType";
-import RideCard from "../../../components/RideCard"; // Import the RideCard component
+import RideCard from "../../../components/RideCard";
 import { useAuth } from "@clerk/nextjs";
-import SearchBar from "../../../components/SearchBar"; // Import the SearchBar component
+import SearchBar from "../../../components/SearchBar";
 
-const ridesApiUrl = "/api/rides"; // API endpoint to fetch all rides
+const ridesApiUrl = "/api/rides";
 
 const AllRidesPage: React.FC = () => {
-  const { userId } = useAuth(); // Get the authenticated user from Clerk
+  const { userId } = useAuth();
   const [rides, setRides] = useState<Ride[]>([]);
-  const [filteredRides, setFilteredRides] = useState<Ride[]>([]); // State to store filtered rides
+  const [filteredRides, setFilteredRides] = useState<Ride[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();

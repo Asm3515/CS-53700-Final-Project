@@ -40,7 +40,6 @@ const RideCard: React.FC<RideCardProps> = ({
 
   // Construct Geoapify URL with bbox
   const geoApiUrl = `https://maps.geoapify.com/v1/staticmap?style=osm-bright-smooth&width=600&height=400&bbox=${minLongitude},${minLatitude},${maxLongitude},${maxLatitude}&apiKey=${apiKey}&path=color:blue|weight:3|opacity:0.8|${originLongitude},${originLatitude}|${destinationLongitude},${destinationLatitude}&marker=lonlat:${originLongitude},${originLatitude};type:awesome;color:green|lonlat:${destinationLongitude},${destinationLatitude};type:awesome;color:red`;
-  console.log("rise-----", ride);
 
   return (
     <li className="p-6 border border-gray-700 rounded-lg bg-gray-900 shadow-lg flex flex-col md:flex-row gap-6 transition-transform transform hover:scale-105 duration-300">
@@ -86,8 +85,21 @@ const RideCard: React.FC<RideCardProps> = ({
         )}
 
         <a
-          href={`/rides/updateride/${rideId}`}
-          className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105 mt-4"
+          href={
+            status === "completed" ? undefined : `/rides/updateride/${rideId}`
+          }
+          className={`py-2 px-4 rounded-lg shadow-md font-bold transition-transform transform mt-4 ${
+            status === "completed"
+              ? "bg-gray-500 cursor-not-allowed text-white"
+              : "bg-yellow-500 hover:bg-yellow-600 text-black hover:scale-105"
+          }`}
+          aria-disabled={status === "completed"}
+          onClick={(e) => {
+            if (status === "completed") {
+              e.preventDefault();
+              alert("Ride with status 'Completed' cannot be updated.");
+            }
+          }}
         >
           Update Ride
         </a>
