@@ -139,27 +139,22 @@ export default function FindRidePage() {
     <div className="p-6 bg-black min-h-screen text-white">
       <button
         onClick={handleBackToDashboard}
-        className="text-yellow-500 hover:text-yellow-600 hover:border place-self-center p-2 rounded-md mb-4"
+        className="text-yellow-500 hover:text-yellow-600 hover:border place-self-center p-2 rounded-md mb-12"
       >
         Back to Dashboard
       </button>
+      <h2 className="text-2xl font-bold mb-6 text-center">Find a Ride</h2>
 
       <div className="w-full max-w-2xl mx-auto bg-gray-800 rounded-lg shadow-lg p-8">
-        <h2 className="text-3xl font-bold text-yellow-400 text-center mb-6">
-          Find a Ride
-        </h2>
-
         <div className="space-y-6">
           <div>
-            <label className="block text-sm text-gray-300 mb-2">
-              Pickup Location
-            </label>
+            <label className="block text-gray-300 mb-2">Pickup Location</label>
             <input
               type="text"
               value={pickup}
               onChange={handlePickupChange}
               placeholder="Enter pickup location"
-              className="w-full bg-gray-700 text-white px-4 py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+              className="w-full p-3 rounded-md border border-gray-600 bg-gray-900 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500"
             />
             {pickupSuggestions.length > 0 && (
               <div className="bg-gray-700 rounded-md mt-2 shadow-md">
@@ -177,15 +172,13 @@ export default function FindRidePage() {
           </div>
 
           <div>
-            <label className="block text-sm text-gray-300 mb-2">
-              Dropoff Location
-            </label>
+            <label className="block text-gray-300 mb-2">Dropoff Location</label>
             <input
               type="text"
               value={dropoff}
               onChange={handleDropoffChange}
               placeholder="Enter dropoff location"
-              className="w-full bg-gray-700 text-white px-4 py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+              className="w-full p-3 rounded-md border border-gray-600 bg-gray-900 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500"
             />
             {dropoffSuggestions.length > 0 && (
               <div className="bg-gray-700 rounded-md mt-2 shadow-md">
@@ -203,15 +196,13 @@ export default function FindRidePage() {
           </div>
 
           <div>
-            <label className="block text-sm text-gray-300 mb-2">
-              Date and Time
-            </label>
+            <label className="block text-gray-300 mb-2">Date and Time</label>
             <input
               type="datetime-local"
               value={dateTime}
               onChange={(e) => setDateTime(e.target.value)}
               min={todayWithTime}
-              className="w-full bg-gray-700 text-white px-4 py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+              className="w-full p-3 rounded-md border border-gray-600 bg-gray-900 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500"
             />
           </div>
 

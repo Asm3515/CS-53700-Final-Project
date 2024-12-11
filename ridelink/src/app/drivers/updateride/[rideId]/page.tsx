@@ -106,15 +106,15 @@ const UpdateRidePage = () => {
   }
 
   return (
-    <div className="flex flex-col min-h-screen p-8 bg-black text-white gap-10">
+    <div className="p-6 bg-black min-h-screen text-white">
       <button
         onClick={handleBackToDashboard}
         className="text-yellow-500 hover:text-yellow-600 hover:border px-6 py-3 rounded-md shadow-lg transition-transform transform hover:scale-105 w-1/4"
       >
-        Return to Dashboard
+        Back to Dashboard
       </button>
+      <h2 className="text-2xl font-bold mb-6 text-center">Update Ride</h2>
       <div className="w-full max-w-lg mx-auto bg-gray-800 text-white rounded-lg shadow-lg p-6">
-        <h2 className="text-2xl font-bold mb-6 text-center">Update Ride</h2>
         {successMessage && (
           <div className="bg-green-500 text-white p-4 rounded-md mb-4 text-center">
             {successMessage}
