@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Ride } from "../components/Types/RideType";
+import { useAuth } from "@clerk/nextjs";
 
 // API key for GeoAPI
 const apiKey = "5312629079c24b608f9ca2bcaa5fce0b";
@@ -18,7 +19,8 @@ const RideCard: React.FC<RideCardProps> = ({
   addToRide,
 }) => {
   const { startLocation, destinationLocation, rideId, status } = ride;
-
+  const { userId } = useAuth();
+  if (ride.passengers.some((passenger) => passenger.clerkId != userId)) return;
   if (
     !startLocation ||
     !startLocation.coordinates ||
@@ -86,7 +88,6 @@ const RideCard: React.FC<RideCardProps> = ({
 
   return (
     <li className="p-6 border border-gray-700 rounded-lg bg-gray-900 shadow-lg flex flex-col md:flex-row gap-6 transition-transform transform hover:scale-105 duration-300">
-      {/* Map on the left side */}
       <div className="w-full md:w-1/2 relative">
         <img
           src={geoApiUrl}
@@ -97,8 +98,6 @@ const RideCard: React.FC<RideCardProps> = ({
           Map Preview
         </div>
       </div>
-
-      {/* Ride details on the right side */}
       <div className="w-full md:w-1/2 flex flex-col justify-center">
         <div>
           <p className="text-yellow-500 text-sm font-bold uppercase">
@@ -124,7 +123,6 @@ const RideCard: React.FC<RideCardProps> = ({
           </p>
         </div>
 
-        {/* Add to Ride Button */}
         {addToRide && (
           <button
             onClick={() => handleAddToRide(rideId)}
@@ -134,10 +132,22 @@ const RideCard: React.FC<RideCardProps> = ({
           </button>
         )}
 
-        {/* Update Ride Button */}
         <a
-          href={`/rides/updateride/${rideId}`}
-          className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105 mt-4"
+          href={
+            status === "completed" ? undefined : `/rides/updateride/${rideId}`
+          }
+          className={`py-2 px-4 rounded-lg shadow-md font-bold transition-transform transform mt-4 ${
+            status === "completed"
+              ? "bg-gray-500 cursor-not-allowed text-white"
+              : "bg-yellow-500 hover:bg-yellow-600 text-black hover:scale-105"
+          }`}
+          aria-disabled={status === "completed"}
+          onClick={(e) => {
+            if (status === "completed") {
+              e.preventDefault();
+              alert("Ride with status 'Completed' cannot be updated.");
+            }
+          }}
         >
           Update Ride
         </a>

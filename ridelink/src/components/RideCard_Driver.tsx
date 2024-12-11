@@ -57,7 +57,6 @@ const RideCard: React.FC<RideCardProps> = ({
         </div>
       </div>
 
-      {/* Ride details on the right side */}
       <div className="w-full md:w-1/2 flex flex-col justify-center">
         <div>
           <p className="text-yellow-500 text-sm font-bold uppercase">
@@ -77,6 +76,10 @@ const RideCard: React.FC<RideCardProps> = ({
           <p className="mt-1 text-white text-base md:text-lg">
             <strong className="text-gray-400">Passengers:</strong>{" "}
             {ride.passengers ? ride.passengers.length : 0}
+          </p>
+          <p className="mt-1 text-white text-base md:text-lg">
+            <strong className="text-gray-400">Fare:</strong> $
+            {ride.fare ? ride.fare : 0}
           </p>
           <p className="mt-1 text-white text-base md:text-lg">
             <strong className="text-gray-400">Status:</strong>{" "}
@@ -106,8 +109,27 @@ const RideCard: React.FC<RideCardProps> = ({
 
           {onUpdateRide && (
             <button
-              onClick={() => onUpdateRide(rideId)}
-              className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105 flex-1"
+              onClick={() => {
+                const now = new Date();
+                const rideStartTime = new Date(ride.startTime);
+
+                if (rideStartTime > now) {
+                  alert("You cannot update rides scheduled for the future.");
+                  return;
+                }
+
+                onUpdateRide(rideId);
+              }}
+              disabled={status === "completed"} // Disable if the status is completed
+              className={`${
+                status === "completed" || new Date(ride.startTime) > new Date()
+                  ? "bg-gray-500 cursor-not-allowed"
+                  : "bg-yellow-500 hover:bg-yellow-600"
+              } text-black font-bold py-2 px-4 rounded-lg shadow-md transition-transform transform ${
+                status !== "completed" && new Date(ride.startTime) <= new Date()
+                  ? "hover:scale-105"
+                  : ""
+              } flex-1`}
             >
               Update Ride
             </button>

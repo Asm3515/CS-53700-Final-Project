@@ -51,7 +51,6 @@ const DriverDashboard = () => {
       }
     } catch (error) {
       console.error("Error fetching rides:", error);
-      setError("Error fetching rides. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -74,13 +73,13 @@ const DriverDashboard = () => {
   }
 
   return (
-    <div className="p-6 bg-black text-white min-h-screen flex flex-col items-center">
+    <div className="p-6 bg-black text-white min-h-screen flex flex-col gap-8">
       <h1 className="text-3xl font-bold text-yellow-500 mb-6 text-center">
         Driver Dashboard
       </h1>
       <button
         onClick={handleCreateRide}
-        className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105 mb-8"
+        className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105 mb-8 w-fit self-center"
       >
         Search Rides to Offer
       </button>
@@ -89,7 +88,7 @@ const DriverDashboard = () => {
           <p>{error}</p>
         </div>
       )}
-
+      <h2 className="text-xl md:text-3xl font-bold text-center">Your Rides</h2>
       {rides.length === 0 ? (
         <div className="bg-gray-800 text-center text-white p-6 rounded-lg shadow-md">
           <p>No rides found for this Driver.</p>

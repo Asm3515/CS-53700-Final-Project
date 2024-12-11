@@ -83,11 +83,17 @@ export default function FindRidePage() {
   };
 
   const handleSubmit = async () => {
+    const now = new Date();
+    const selectedDateTime = new Date(dateTime);
     try {
       if (!selectedPickupLocation || !selectedDropoffLocation || !dateTime) {
         alert(
           "Please select pickup and dropoff locations and choose a date and time."
         );
+        return;
+      }
+      if (selectedDateTime < now) {
+        alert("You cannot create a ride for a past date and time.");
         return;
       }
 
@@ -130,10 +136,10 @@ export default function FindRidePage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-900 text-white p-6">
+    <div className="p-6 bg-black min-h-screen text-white">
       <button
         onClick={handleBackToDashboard}
-        className="text-yellow-500 hover:text-yellow-600 font-bold px-6 py-2 mb-6 rounded-md shadow-lg bg-gray-800 hover:bg-gray-700 transition-transform transform hover:scale-105 w-40"
+        className="text-yellow-500 hover:text-yellow-600 hover:border place-self-center p-2 rounded-md mb-4"
       >
         Back to Dashboard
       </button>
