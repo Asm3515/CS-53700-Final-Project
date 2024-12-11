@@ -66,8 +66,9 @@ const DriverDashboard = () => {
 
   if (loading) {
     return (
-      <div className="p-6 bg-black text-white min-h-screen flex items-center justify-center">
-        <h2 className="text-2xl font-bold">Loading rides...</h2>
+      <div className="p-6 bg-black text-white min-h-screen">
+        <h2 className="text-2xl font-bold mb-4">Driver Dashboard</h2>
+        <p className="text-lg">Loading rides...</p>
       </div>
     );
   }
