@@ -42,7 +42,7 @@ describe("Ride Management", () => {
           rideId: "1",
           origin: "Fort Wayne, Indiana, United States",
           destination: "Chicago, Illinois, United States",
-          passengers: [],
+          passengers: [{ clerkId: "mockUserId" }],
           fare: 100,
           startTime: "2023-12-12T10:00:00Z",
           destinationLocation: {
@@ -54,11 +54,13 @@ describe("Ride Management", () => {
             coordinates: [-85.139351, 41.079273],
           },
           createdBy: "rider",
+          status: "pending",
           _id: "ride1",
           __v: 0,
         },
       ],
     }).as("getRides");
+
     cy.intercept("PATCH", "/api/rides?rideId=1", {
       statusCode: 200,
       body: {
@@ -66,15 +68,20 @@ describe("Ride Management", () => {
         passengers: [{ clerkId: "mockUserId" }],
         origin: "Fort Wayne, Indiana, United States",
         destination: "Chicago, Illinois, United States",
+        status: "pending",
       },
     }).as("addToRide");
+
     cy.visit("https://ridelink-public.vercel.app/rides/findrides");
 
     cy.wait("@getRides");
-
     cy.contains("Available Rides").should("be.visible");
     cy.contains("Fort Wayne, Indiana, United States").should("be.visible");
     cy.contains("Chicago, Illinois, United States").should("be.visible");
+
+    cy.contains("Add me to Ride").should("be.visible").click();
+    cy.wait("@addToRide");
+    // cy.contains("You have been added to the ride!").should("be.visible");
   });
 
   it("should allow booking a ride as a passenger", () => {
