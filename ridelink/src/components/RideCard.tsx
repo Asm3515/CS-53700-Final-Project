@@ -32,6 +32,49 @@ const RideCard: React.FC<RideCardProps> = ({
   const [destinationLongitude, destinationLatitude] =
     destinationLocation.coordinates;
 
+    const calculateDistance = (
+      lat1: number,
+      lon1: number,
+      lat2: number,
+      lon2: number
+    ): number => {
+      const toRadians = (degree: number) => (degree * Math.PI) / 180;
+      const R = 3958.8; // Earth radius in miles
+      const dLat = toRadians(lat2 - lat1);
+      const dLon = toRadians(lon2 - lon1);
+     
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRadians(lat1)) *
+          Math.cos(toRadians(lat2)) *
+          Math.sin(dLon / 2) *
+          Math.sin(dLon / 2);
+     
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c; // Distance in miles
+    };
+
+    const calculateFare = (
+      distance: number,
+      startTime: Date,
+      baseRate: number = 2.5, // Base rate per mile
+      nightSurcharge: number = 1.5 // Night surcharge multiplier
+    ): number => {
+      const hour = startTime.getHours();
+      const isNightTime = hour >= 22 || hour < 6; // Nighttime: 10 PM to 6 AM
+      const fare = distance * baseRate * (isNightTime ? nightSurcharge : 1);
+      return parseFloat(fare.toFixed(2)); // Round to two decimal places
+    };
+
+    const distance = calculateDistance(
+      originLatitude,
+      originLongitude,
+      destinationLatitude,
+      destinationLongitude
+    );
+     
+    const fare = calculateFare(distance, new Date(ride.startTime));
+
   // Calculate the bounding box (bbox) for origin and destination
   const minLongitude = Math.min(originLongitude, destinationLongitude);
   const minLatitude = Math.min(originLatitude, destinationLatitude);
@@ -71,6 +114,9 @@ const RideCard: React.FC<RideCardProps> = ({
           <p className="mt-1 text-white text-base md:text-lg">
             <strong className="text-gray-400">Start Time:</strong>{" "}
             {new Date(ride.startTime).toLocaleString()}
+          </p>
+          <p className="mt-1 text-white text-base md:text-lg">
+            <strong className="text-gray-400">Fare:</strong> ${fare}
           </p>
         </div>
         {addToRide ? (
