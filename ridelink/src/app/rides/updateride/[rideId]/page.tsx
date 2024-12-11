@@ -75,8 +75,51 @@ const UpdateRidePage = () => {
     }
   }, [rideId, userId]);
 
+  const handleCancelRide = async () => {
+    try {
+      if (ride?.status !== "pending") {
+        alert("You can only cancel rides with a pending status.");
+        return;
+      }
+
+      const now = new Date();
+      const rideStartTime = new Date(ride?.startTime);
+
+      if (rideStartTime <= now) {
+        alert("You can only cancel rides scheduled for future dates.");
+        return;
+      }
+
+      setLoading(true);
+      setError(null);
+
+      const updatedPassengers =
+        ride?.passengers.filter((passenger) => passenger.clerkId !== userId) ||
+        [];
+      await axios.patch(`/api/rides?rideId=${rideId}`, {
+        ...ride,
+        passengers: updatedPassengers,
+      });
+
+      setSuccessMessage("You have been removed from the ride successfully!");
+      setTimeout(() => router.push("/passenger/dashboard"), 2000);
+    } catch (err) {
+      setError("Failed to cancel ride. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleUpdateRide = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const now = new Date();
+    const selectedStartTime = new Date(startTime);
+
+    if (selectedStartTime <= now) {
+      alert("You can only set the start time to a future date.");
+      return;
+    }
 
     try {
       setLoading(true);
@@ -86,7 +129,7 @@ const UpdateRidePage = () => {
       if (destination !== ride?.destination)
         updatedRideData.destination = destination;
       if (startTime !== new Date(ride?.startTime).toISOString().slice(0, 16)) {
-        updatedRideData.startTime = new Date(startTime).toISOString();
+        updatedRideData.startTime = selectedStartTime.toISOString();
       }
 
       if (
@@ -119,28 +162,6 @@ const UpdateRidePage = () => {
       setTimeout(() => router.push("/passenger/dashboard"), 2000);
     } catch (err) {
       setError("Failed to update ride. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleCancelRide = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      const updatedPassengers =
-        ride?.passengers.filter((passenger) => passenger.clerkId !== userId) ||
-        [];
-      await axios.patch(`/api/rides?rideId=${rideId}`, {
-        ...ride,
-        passengers: updatedPassengers,
-      });
-
-      setSuccessMessage("You have been removed from the ride successfully!");
-      setTimeout(() => router.push("/passenger/dashboard"), 2000);
-    } catch (err) {
-      setError("Failed to cancel ride. Please try again.");
     } finally {
       setLoading(false);
     }

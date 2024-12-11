@@ -40,10 +40,10 @@ const RideCard: React.FC<RideCardProps> = ({
 
   // Construct Geoapify URL with bbox
   const geoApiUrl = `https://maps.geoapify.com/v1/staticmap?style=osm-bright-smooth&width=600&height=400&bbox=${minLongitude},${minLatitude},${maxLongitude},${maxLatitude}&apiKey=${apiKey}&path=color:blue|weight:3|opacity:0.8|${originLongitude},${originLatitude}|${destinationLongitude},${destinationLatitude}&marker=lonlat:${originLongitude},${originLatitude};type:awesome;color:green|lonlat:${destinationLongitude},${destinationLatitude};type:awesome;color:red`;
+  console.log("rise-----", ride);
 
   return (
     <li className="p-6 border border-gray-700 rounded-lg bg-gray-900 shadow-lg flex flex-col md:flex-row gap-6 transition-transform transform hover:scale-105 duration-300">
-      {/* Map on the left side */}
       <div className="w-full md:w-1/2 relative">
         <img
           src={geoApiUrl}
@@ -54,8 +54,6 @@ const RideCard: React.FC<RideCardProps> = ({
           Map Preview
         </div>
       </div>
-
-      {/* Ride details on the right side */}
       <div className="w-full md:w-1/2 flex flex-col justify-center">
         <div>
           <p className="text-yellow-500 text-sm font-bold uppercase">
@@ -78,7 +76,6 @@ const RideCard: React.FC<RideCardProps> = ({
           </p>
         </div>
 
-        {/* Add to Ride Button */}
         {addToRide && (
           <button
             onClick={() => handleAddToRide(rideId)}
@@ -88,7 +85,6 @@ const RideCard: React.FC<RideCardProps> = ({
           </button>
         )}
 
-        {/* Update Ride Button */}
         <a
           href={`/rides/updateride/${rideId}`}
           className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105 mt-4"

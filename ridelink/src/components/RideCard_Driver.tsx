@@ -79,6 +79,10 @@ const RideCard: React.FC<RideCardProps> = ({
             {ride.passengers ? ride.passengers.length : 0}
           </p>
           <p className="mt-1 text-white text-base md:text-lg">
+            <strong className="text-gray-400">Fare:</strong> $
+            {ride.fare ? ride.fare : 0}
+          </p>
+          <p className="mt-1 text-white text-base md:text-lg">
             <strong className="text-gray-400">Status:</strong>{" "}
             <span
               className={`px-2 py-1 rounded text-sm font-bold ${
@@ -106,14 +110,26 @@ const RideCard: React.FC<RideCardProps> = ({
 
           {onUpdateRide && (
             <button
-              onClick={() => onUpdateRide(rideId)}
+              onClick={() => {
+                const now = new Date();
+                const rideStartTime = new Date(ride.startTime);
+
+                if (rideStartTime > now) {
+                  alert("You cannot update rides scheduled for the future.");
+                  return;
+                }
+
+                onUpdateRide(rideId);
+              }}
               disabled={status === "completed"} // Disable if the status is completed
               className={`${
-                status === "completed"
+                status === "completed" || new Date(ride.startTime) > new Date()
                   ? "bg-gray-500 cursor-not-allowed"
                   : "bg-yellow-500 hover:bg-yellow-600"
               } text-black font-bold py-2 px-4 rounded-lg shadow-md transition-transform transform ${
-                status !== "completed" ? "hover:scale-105" : ""
+                status !== "completed" && new Date(ride.startTime) <= new Date()
+                  ? "hover:scale-105"
+                  : ""
               } flex-1`}
             >
               Update Ride

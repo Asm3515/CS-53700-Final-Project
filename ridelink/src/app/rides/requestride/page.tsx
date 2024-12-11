@@ -83,11 +83,17 @@ export default function FindRidePage() {
   };
 
   const handleSubmit = async () => {
+    const now = new Date();
+    const selectedDateTime = new Date(dateTime);
     try {
       if (!selectedPickupLocation || !selectedDropoffLocation || !dateTime) {
         alert(
           "Please select pickup and dropoff locations and choose a date and time."
         );
+        return;
+      }
+      if (selectedDateTime < now) {
+        alert("You cannot create a ride for a past date and time.");
         return;
       }
 
