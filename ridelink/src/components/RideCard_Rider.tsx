@@ -20,7 +20,6 @@ const RideCard: React.FC<RideCardProps> = ({
 }) => {
   const { startLocation, destinationLocation, rideId, status } = ride;
   const { userId } = useAuth();
-  if (ride.passengers.some((passenger) => passenger.clerkId != userId)) return;
   if (
     !startLocation ||
     !startLocation.coordinates ||
