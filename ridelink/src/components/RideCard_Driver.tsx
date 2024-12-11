@@ -19,7 +19,7 @@ const RideCard: React.FC<RideCardProps> = ({
   addToRide,
   onUpdateRide,
 }) => {
-  const { startLocation, destinationLocation, rideId } = ride;
+  const { startLocation, destinationLocation, rideId, status } = ride;
 
   if (
     !startLocation ||
@@ -77,6 +77,20 @@ const RideCard: React.FC<RideCardProps> = ({
           <p className="mt-1 text-white text-base md:text-lg">
             <strong className="text-gray-400">Passengers:</strong>{" "}
             {ride.passengers ? ride.passengers.length : 0}
+          </p>
+          <p className="mt-1 text-white text-base md:text-lg">
+            <strong className="text-gray-400">Status:</strong>{" "}
+            <span
+              className={`px-2 py-1 rounded text-sm font-bold ${
+                status === "pending"
+                  ? "bg-yellow-500 text-black"
+                  : status === "active"
+                  ? "bg-blue-500 text-white"
+                  : "bg-green-500 text-white"
+              }`}
+            >
+              {status.charAt(0).toUpperCase() + status.slice(1)}
+            </span>
           </p>
         </div>
 

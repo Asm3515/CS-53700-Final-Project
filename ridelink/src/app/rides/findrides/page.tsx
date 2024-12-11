@@ -26,8 +26,12 @@ const AllRidesPage: React.FC = () => {
           throw new Error("Failed to fetch rides");
         }
         const data = await response.json();
-        setRides(data); // Assuming the response is an array of rides
-        setFilteredRides(data); // Initially, all rides are displayed
+
+        // Filter rides with status "pending"
+        const pendingRides = data.filter((ride) => ride.status === "pending");
+
+        setRides(data); // All rides
+        setFilteredRides(pendingRides); // Only rides with status "pending"
       } catch (err) {
         setError("Error fetching rides. Please try again later.");
       } finally {

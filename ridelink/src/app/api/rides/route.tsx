@@ -187,7 +187,6 @@
 //   }
 // };
 
-
 // /**
 //  * Update a ride
 //  */
@@ -312,8 +311,6 @@
 //   }
 // };
 
-
-
 import Ride from "@/lib/modals/ride.model";
 import User from "@/lib/modals/user.model";
 import Rider from "@/lib/modals/rider.model";
@@ -338,6 +335,9 @@ export const POST = async (request: NextRequest) => {
       fare,
     } = body;
 
+    // Set the default status
+    const ride_status = "pending";
+
     // Validate createdBy
     if (!createdBy || !["rider", "passenger"].includes(createdBy)) {
       return NextResponse.json(
@@ -351,7 +351,10 @@ export const POST = async (request: NextRequest) => {
     if (createdBy === "rider") {
       if (!rider || !origin || !destination) {
         return NextResponse.json(
-          { message: "Rider-created rides must include rider, origin, and destination" },
+          {
+            message:
+              "Rider-created rides must include rider, origin, and destination",
+          },
           { status: 400 }
         );
       }
@@ -375,22 +378,30 @@ export const POST = async (request: NextRequest) => {
     if (createdBy === "passenger") {
       if (!passengers || passengers.length === 0) {
         return NextResponse.json(
-          { message: "Passenger-created rides must include at least one passenger" },
+          {
+            message:
+              "Passenger-created rides must include at least one passenger",
+          },
           { status: 400 }
         );
       }
 
       for (const passenger of passengers) {
-        const passengerExists = await User.findOne({ clerkId: passenger.clerkId });
+        const passengerExists = await User.findOne({
+          clerkId: passenger.clerkId,
+        });
         if (!passengerExists) {
           return NextResponse.json(
-            { message: `Passenger with clerkId ${passenger.clerkId} does not exist` },
+            {
+              message: `Passenger with clerkId ${passenger.clerkId} does not exist`,
+            },
             { status: 404 }
           );
         }
       }
     }
 
+    // Create the new ride, including the status field
     const newRide = await Ride.create({
       createdBy,
       rider,
@@ -401,6 +412,7 @@ export const POST = async (request: NextRequest) => {
       startLocation,
       destinationLocation,
       fare,
+      status: ride_status,
     });
 
     return NextResponse.json(newRide, { status: 201 });
@@ -430,22 +442,29 @@ export const GET = async (request: NextRequest) => {
     if (rideId) {
       rides = await Ride.findOne({ rideId });
       if (!rides) {
-        return NextResponse.json({ message: "Ride not found" }, { status: 404 });
+        return NextResponse.json(
+          { message: "Ride not found" },
+          { status: 404 }
+        );
       }
     } else if (createdBy) {
       rides = await Ride.find({ createdBy });
     } else if (passengerId) {
       rides = await Ride.find({ "passengers.clerkId": passengerId });
       if (!rides || rides.length === 0) {
-        return NextResponse.json({ message: "No rides found for the given passenger" }, { status: 404 });
+        return NextResponse.json(
+          { message: "No rides found for the given passenger" },
+          { status: 404 }
+        );
       }
     } else if (riderId) {
       rides = await Ride.find({ rider: riderId });
       if (!rides || rides.length === 0) {
-        return NextResponse.json({ message: "No rides found for the given rider" }, { status: 404  });
+        return NextResponse.json(
+          { message: "No rides found for the given rider" },
+          { status: 404 }
+        );
       }
-
-      
     } else {
       rides = await Ride.find();
     }
@@ -468,7 +487,10 @@ export const PATCH = async (request: NextRequest) => {
     const rideId = searchParams.get("rideId");
 
     if (!rideId) {
-      return NextResponse.json({ message: "rideId is required" }, { status: 400 });
+      return NextResponse.json(
+        { message: "rideId is required" },
+        { status: 400 }
+      );
     }
 
     const body = await request.json();
@@ -481,6 +503,7 @@ export const PATCH = async (request: NextRequest) => {
       startLocation,
       destinationLocation,
       fare,
+      status,
     } = body;
 
     await connect();
@@ -497,10 +520,14 @@ export const PATCH = async (request: NextRequest) => {
 
     if (passengers && passengers.length > 0) {
       for (const passenger of passengers) {
-        const passengerExists = await User.findOne({ clerkId: passenger.clerkId });
+        const passengerExists = await User.findOne({
+          clerkId: passenger.clerkId,
+        });
         if (!passengerExists) {
           return NextResponse.json(
-            { message: `Passenger with clerkId ${passenger.clerkId} does not exist` },
+            {
+              message: `Passenger with clerkId ${passenger.clerkId} does not exist`,
+            },
             { status: 404 }
           );
         }
@@ -518,6 +545,7 @@ export const PATCH = async (request: NextRequest) => {
         ...(startLocation && { startLocation }),
         ...(destinationLocation && { destinationLocation }),
         ...(fare && { fare }),
+        ...(status && { status }),
       },
       { new: true }
     );
@@ -541,8 +569,6 @@ export const PATCH = async (request: NextRequest) => {
  * Update a ride by adding/removing a rider or passenger
  */
 
-
-
 /**
  * Delete a ride
  */
@@ -552,7 +578,10 @@ export const DELETE = async (request: NextRequest) => {
     const rideId = searchParams.get("rideId");
 
     if (!rideId) {
-      return NextResponse.json({ message: "rideId is required" }, { status: 400 });
+      return NextResponse.json(
+        { message: "rideId is required" },
+        { status: 400 }
+      );
     }
 
     await connect();

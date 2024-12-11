@@ -1,7 +1,6 @@
 // import { Schema, model, models } from "mongoose";
 // import { v4 as uuidv4 } from "uuid";
 
-
 // const RideSchema = new Schema({
 //   rideId: {
 //     type: String,
@@ -197,6 +196,12 @@ const RideSchema = new Schema({
       required: true,
     },
   },
+  status: {
+    type: String,
+    enum: ["pending", "active", "completed", "cancelled"],
+    default: "pending",
+    required: true,
+  },
 });
 
 // GeoJSON Validation Function
@@ -204,8 +209,10 @@ function arrayOfLatLon(val: any) {
   return (
     Array.isArray(val) &&
     val.length === 2 &&
-    val[0] >= -180 && val[0] <= 180 && // Longitude
-    val[1] >= -90 && val[1] <= 90 // Latitude
+    val[0] >= -180 &&
+    val[0] <= 180 && // Longitude
+    val[1] >= -90 &&
+    val[1] <= 90 // Latitude
   );
 }
 

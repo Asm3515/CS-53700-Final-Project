@@ -95,6 +95,9 @@ const PassengerDashboard = () => {
               </button>
             ))}
           </div>
+          <h2 className="text-xl md:text-3xl font-bold text-center">
+            Your Rides
+          </h2>
           <ul className="space-y-6">
             {rides.map((ride) => (
               <RideCard key={ride.rideId} ride={ride} />

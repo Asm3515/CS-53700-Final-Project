@@ -75,33 +75,27 @@ const DriverDashboard = () => {
 
   return (
     <div className="p-6 bg-black text-white min-h-screen flex flex-col items-center">
-      {/* Page Title */}
       <h1 className="text-3xl font-bold text-yellow-500 mb-6 text-center">
         Driver Dashboard
       </h1>
-
-      {/* Centered Button */}
       <button
         onClick={handleCreateRide}
         className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105 mb-8"
       >
         Search Rides to Offer
       </button>
-
-      {/* Error Message */}
       {error && (
         <div className="bg-red-800 text-white p-4 rounded-md mb-6 text-center">
           <p>{error}</p>
         </div>
       )}
 
-      {/* Ride Cards */}
       {rides.length === 0 ? (
         <div className="bg-gray-800 text-center text-white p-6 rounded-lg shadow-md">
           <p>No rides found for this Driver.</p>
         </div>
       ) : (
-        <ul className="flex flex-wrap justify-center gap-6">
+        <ul className="space-y-6">
           {rides.map((ride) => (
             <RideCard
               key={ride.rideId}
