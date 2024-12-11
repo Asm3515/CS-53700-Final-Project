@@ -57,7 +57,6 @@ const RideCard: React.FC<RideCardProps> = ({
         </div>
       </div>
 
-      {/* Ride details on the right side */}
       <div className="w-full md:w-1/2 flex flex-col justify-center">
         <div>
           <p className="text-yellow-500 text-sm font-bold uppercase">

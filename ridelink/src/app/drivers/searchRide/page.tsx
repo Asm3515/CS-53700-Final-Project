@@ -3,20 +3,19 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Ride } from "../../../components/Types/RideType";
-import { useAuth } from "@clerk/nextjs"; // Clerk authentication hook
-import SearchBar from "../../../components/SearchBar"; // Import SearchBar component
+import { useAuth } from "@clerk/nextjs";
+import SearchBar from "../../../components/SearchBar";
 
-const ridesApiUrl = "/api/rides"; // API endpoint to fetch all rides
+const ridesApiUrl = "/api/rides";
 
 const AllRidesPage: React.FC = () => {
-  const { userId } = useAuth(); // Get the authenticated user from Clerk
+  const { userId } = useAuth();
   const [rides, setRides] = useState<Ride[]>([]);
-  const [filteredRides, setFilteredRides] = useState<Ride[]>([]); // State for filtered rides
+  const [filteredRides, setFilteredRides] = useState<Ride[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  // Fetch all rides when the component mounts
   useEffect(() => {
     const fetchRides = async () => {
       try {
@@ -25,8 +24,9 @@ const AllRidesPage: React.FC = () => {
           throw new Error("Failed to fetch rides");
         }
         const data = await response.json();
-        setRides(data); // Assuming the response is an array of rides
-        setFilteredRides(data); // Initially, all rides are displayed
+        setRides(data);
+        const pendingRides = data.filter((ride) => ride.status === "pending");
+        setFilteredRides(pendingRides);
       } catch (err) {
         setError("Error fetching rides. Please try again later.");
       } finally {
@@ -37,12 +37,12 @@ const AllRidesPage: React.FC = () => {
     fetchRides();
   }, []);
 
-  // Filter rides based on search term
   const handleSearch = (searchTerm: string) => {
     if (searchTerm === "") {
-      setFilteredRides(rides); // Show all rides if no search term
+      const pendingRides = rides.filter((ride) => ride.status === "pending");
+      setFilteredRides(pendingRides);
     } else {
-      const filtered = rides.filter(
+      const filtered = filteredRides.filter(
         (ride) =>
           ride.origin.toLowerCase().includes(searchTerm.toLowerCase()) ||
           ride.destination.toLowerCase().includes(searchTerm.toLowerCase())
@@ -53,13 +53,13 @@ const AllRidesPage: React.FC = () => {
 
   const handleAddToRide = async (rideId: string) => {
     try {
-      const rideToUpdate = rides.find((ride) => ride.rideId === rideId);
+      const rideToUpdate = filteredRides.find((ride) => ride.rideId === rideId);
       if (!rideToUpdate) {
         return;
       }
 
       const updatedRide = {
-        rider: userId, // Add the current user's Clerk ID as the rider
+        rider: userId,
         passengers: rideToUpdate.passengers,
         origin: rideToUpdate.origin,
         destination: rideToUpdate.destination,
@@ -93,8 +93,6 @@ const AllRidesPage: React.FC = () => {
   const handleBackToDashboard = () => {
     router.push("/drivers/dashboard");
   };
-
-  // Loading and Error States
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-black text-white">
@@ -125,14 +123,10 @@ const AllRidesPage: React.FC = () => {
         All Rides
       </h1>
 
-      {/* Back to Dashboard Button */}
-
-      {/* Search Bar */}
       <div className="flex justify-center mb-6">
         <SearchBar onSearch={handleSearch} />
       </div>
 
-      {/* Ride List */}
       {filteredRides.length === 0 ? (
         <div className="bg-gray-800 text-center p-6 rounded-lg shadow-md">
           <p className="text-xl text-gray-300">No rides found.</p>
@@ -166,7 +160,6 @@ const AllRidesPage: React.FC = () => {
                 key={rideId}
                 className="bg-gray-900 p-4 rounded-lg shadow-md flex flex-col justify-between h-full"
               >
-                {/* Map */}
                 <div className="w-full h-48 md:h-64 mb-4">
                   <img
                     src={geoApiUrl}
@@ -174,8 +167,6 @@ const AllRidesPage: React.FC = () => {
                     className="w-full h-full object-cover rounded-lg"
                   />
                 </div>
-
-                {/* Ride Details */}
                 <div className="flex-grow">
                   <p className="text-lg">
                     <strong className="text-gray-400">Origin:</strong> {origin}
@@ -189,8 +180,6 @@ const AllRidesPage: React.FC = () => {
                     {new Date(startTime).toLocaleString()}
                   </p>
                 </div>
-
-                {/* Add to Ride Button */}
                 <div className="mt-5">
                   <button
                     onClick={() => handleAddToRide(rideId)}

@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Ride } from "../components/Types/RideType";
+import { useAuth } from "@clerk/nextjs";
 
 // API key for GeoAPI
 const apiKey = "5312629079c24b608f9ca2bcaa5fce0b";
@@ -18,7 +19,8 @@ const RideCard: React.FC<RideCardProps> = ({
   addToRide,
 }) => {
   const { startLocation, destinationLocation, rideId, status } = ride;
-
+  const { userId } = useAuth();
+  if (ride.passengers.some((passenger) => passenger.clerkId != userId)) return;
   if (
     !startLocation ||
     !startLocation.coordinates ||

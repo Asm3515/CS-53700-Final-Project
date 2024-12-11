@@ -51,7 +51,6 @@ const DriverDashboard = () => {
       }
     } catch (error) {
       console.error("Error fetching rides:", error);
-      setError("Error fetching rides. Please try again.");
     } finally {
       setLoading(false);
     }
