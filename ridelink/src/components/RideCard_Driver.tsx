@@ -107,7 +107,14 @@ const RideCard: React.FC<RideCardProps> = ({
           {onUpdateRide && (
             <button
               onClick={() => onUpdateRide(rideId)}
-              className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105 flex-1"
+              disabled={status === "completed"} // Disable if the status is completed
+              className={`${
+                status === "completed"
+                  ? "bg-gray-500 cursor-not-allowed"
+                  : "bg-yellow-500 hover:bg-yellow-600"
+              } text-black font-bold py-2 px-4 rounded-lg shadow-md transition-transform transform ${
+                status !== "completed" ? "hover:scale-105" : ""
+              } flex-1`}
             >
               Update Ride
             </button>

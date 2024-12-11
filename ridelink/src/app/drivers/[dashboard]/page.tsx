@@ -61,7 +61,11 @@ const DriverDashboard = () => {
     router.push("/drivers/searchRide");
   };
 
-  const handleUpdateRide = (rideId: string) => {
+  const handleUpdateRide = (rideId: string, rideStatus: string) => {
+    if (rideStatus === "completed") {
+      alert("This ride has been completed and cannot be updated or deleted.");
+      return;
+    }
     router.push(`/drivers/updateride/${rideId}`);
   };
 
@@ -100,7 +104,7 @@ const DriverDashboard = () => {
             <RideCard
               key={ride.rideId}
               ride={ride}
-              onUpdateRide={handleUpdateRide}
+              onUpdateRide={() => handleUpdateRide(ride.rideId, ride.status)}
             />
           ))}
         </ul>
